@@ -9,7 +9,8 @@ import UserDashboard from "./pages/UserDashboard";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
 import CartPage from "./pages/CartPage";
 import AddressesPage from "./features/addresses/address";
-import OrdersPage from "./features/order/order";
+import OrdersPage from "./features/order/order";  
+import ForgotPassword from "./features/settings/settings";
 
 const router = createBrowserRouter([
   {
@@ -51,6 +52,11 @@ const router = createBrowserRouter([
   {
     path: "/orders",
     element: <OrdersPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/forgot-password",
+    element: <ForgotPassword />,
     errorElement: <ErrorPage />,
   }
 

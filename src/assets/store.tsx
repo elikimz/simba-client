@@ -15,6 +15,8 @@ import { productsAPI } from "../features/products/productsAPI";
 import {cartAPI} from "../features/cart/cartAPI"
 import { addressesAPI } from "../features/addresses/addressAPI";
 import { ordersAPI } from "../features/order/orderAPI";
+import { dealsAPI } from "../features/deals/dealsAPI";
+import { settingsAPI } from "../features/settings/settingsAPI";
 
 
 const persistConfig = {
@@ -30,6 +32,8 @@ const rootReducer = combineReducers({
   [cartAPI.reducerPath]: cartAPI.reducer,
   [addressesAPI.reducerPath]: addressesAPI.reducer,
   [ordersAPI.reducerPath]: ordersAPI.reducer,
+  [dealsAPI.reducerPath]: dealsAPI.reducer,
+  [settingsAPI.reducerPath]: settingsAPI.reducer,
  
 });
 
@@ -49,7 +53,9 @@ export const store = configureStore({
     productsAPI.middleware,
     cartAPI.middleware,
     addressesAPI.middleware,
-    ordersAPI.middleware
+    ordersAPI.middleware,
+    dealsAPI.middleware,
+    settingsAPI.middleware
    
     ),
 });

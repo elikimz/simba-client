@@ -18,6 +18,7 @@ import { ordersAPI } from "../features/order/orderAPI";
 import { dealsAPI } from "../features/deals/dealsAPI";
 import { settingsAPI } from "../features/settings/settingsAPI";
 import { heroBannersAPI } from "../features/banner/bannerAPI";
+import { categoriesAPI } from "../features/categories/catagoriesAPI";
 
 
 const persistConfig = {
@@ -36,6 +37,7 @@ const rootReducer = combineReducers({
   [dealsAPI.reducerPath]: dealsAPI.reducer,
   [settingsAPI.reducerPath]: settingsAPI.reducer,
   [heroBannersAPI.reducerPath]: heroBannersAPI.reducer,
+  [categoriesAPI.reducerPath]: categoriesAPI.reducer,
  
 });
 
@@ -58,7 +60,9 @@ export const store = configureStore({
     ordersAPI.middleware,
     dealsAPI.middleware,
     settingsAPI.middleware,
-    heroBannersAPI.middleware
+    heroBannersAPI.middleware,
+    categoriesAPI.middleware
+    
    
     ),
 });

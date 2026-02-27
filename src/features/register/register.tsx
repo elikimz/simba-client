@@ -609,7 +609,7 @@ export default function RegisterPage() {
                   label="Full name"
                   value={name}
                   onChange={setName}
-                  placeholder="e.g. Wairimu Kimani"
+                  placeholder="e.g. XXXXXX"
                   autoComplete="name"
                   error={errors.name}
                   disabled={isLoading}

@@ -20,6 +20,10 @@ import AdminManageCategories from "./features/categories/categories";
 import AdminLayout from "./pages/admimlayout";
 import AdminManageDeals from "./features/deals/AdminManagedeals";
 import AdminManagebanner from "./features/banner/AdminManagebanner";
+import AdminManageOrders from "./features/order/adminmanageorder";
+import AdminManageContacts from "./features/contacts/adminmanagecontacts";
+import UserContacts from "./features/contacts/contacts";
+
 
 const router = createBrowserRouter([
   {
@@ -62,6 +66,14 @@ const router = createBrowserRouter([
     element: <ForgotPassword />,
   },
 
+  {
+    path: "/contact",
+    element: <UserContacts />,
+  },
+
+ 
+ 
+
   // ✅ ADMIN ROUTES
   {
     path: "/admin/dashboard",
@@ -84,7 +96,17 @@ const router = createBrowserRouter([
   {
     path: "/admin/banners",
     element: <AdminManagebanner />, // Admin banner management page
-  }
+  },
+  {
+    path: "/admin/orders",
+    element: <AdminManageOrders />, // Admin orders management page
+  },
+
+  {
+    path:"/admin/messages",
+    element: <AdminManageContacts />, // Admin contact management page
+  },
+ 
 
 ]);
 

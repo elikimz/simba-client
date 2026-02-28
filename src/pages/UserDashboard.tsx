@@ -139,18 +139,18 @@ export default function UserDashboard() {
           <SidebarLink to="/orders" onClick={onAfterClick}>
             My Orders
           </SidebarLink>
-          <SidebarLink to="/wishlist" onClick={onAfterClick}>
+          {/* <SidebarLink to="/wishlist" onClick={onAfterClick}>
             Wishlist
-          </SidebarLink>
+          </SidebarLink> */}
           <SidebarLink to="/addresses" onClick={onAfterClick}>
             Addresses
           </SidebarLink>
           <SidebarLink to="/settings" onClick={onAfterClick}>
             Settings
           </SidebarLink>
-          <SidebarLink to="/support" onClick={onAfterClick}>
+          {/* <SidebarLink to="/support" onClick={onAfterClick}>
             Support
-          </SidebarLink>
+          </SidebarLink> */}
         </nav>
 
         <div className="my-5 h-px bg-gray-100" />

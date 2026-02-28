@@ -23,6 +23,8 @@ import AdminManagebanner from "./features/banner/AdminManagebanner";
 import AdminManageOrders from "./features/order/adminmanageorder";
 import AdminManageContacts from "./features/contacts/adminmanagecontacts";
 import UserContacts from "./features/contacts/contacts";
+import UserSetting from "./features/settings/passoword";
+import Blog from "./pages/blog";
 
 
 const router = createBrowserRouter([
@@ -71,7 +73,11 @@ const router = createBrowserRouter([
     element: <UserContacts />,
   },
 
- 
+   {
+    path: "/blog",
+    element: <Blog />,
+   }
+    ,
  
 
   // ✅ ADMIN ROUTES
@@ -106,7 +112,10 @@ const router = createBrowserRouter([
     path:"/admin/messages",
     element: <AdminManageContacts />, // Admin contact management page
   },
- 
+  {
+    path:"/settings",
+    element: <UserSetting />, // User setting page
+ }
 
 ]);
 

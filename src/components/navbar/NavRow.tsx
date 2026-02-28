@@ -114,11 +114,11 @@ const NavRow = ({ onCategorySelect }: Props) => {
                 Home
               </Link>
 
-              <Link to="/shop" className="hover:text-gray-600">
+              <Link to="/" className="hover:text-gray-600">
                 Shop
               </Link>
 
-              <Link to="/best-sellers" className="hover:text-gray-600">
+              <Link to="/" className="hover:text-gray-600">
                 Best Sellers
               </Link>
 

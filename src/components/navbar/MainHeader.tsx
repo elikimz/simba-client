@@ -121,7 +121,7 @@ const MainHeader = ({ logoSrc }: Props) => {
               </button>
 
               {/* Wishlist (unchanged) */}
-              <button className="relative p-2" aria-label="Wishlist">
+              {/* <button className="relative p-2" aria-label="Wishlist">
                 <svg
                   className="h-7 w-7 text-gray-900 sm:h-8 sm:w-8"
                   viewBox="0 0 24 24"
@@ -134,7 +134,7 @@ const MainHeader = ({ logoSrc }: Props) => {
                 <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-indigo-700 text-[11px] font-bold text-white">
                   1
                 </span>
-              </button>
+              </button> */}
 
               {/* Cart */}
               <button

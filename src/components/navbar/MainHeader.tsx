@@ -212,12 +212,12 @@ const MainHeader = ({ logoSrc }: Props) => {
             </button>
 
             {/* ✅ debug proof image (remove later) */}
-            <img
+            {/* <img
               src="/logo.png"
               alt="Logo debug"
               className="h-10 w-auto object-contain border border-red-500"
               loading="eager"
-            />
+            /> */}
           </div>
 
           {/* Right side (Account + Cart) */}

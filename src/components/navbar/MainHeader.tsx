@@ -7,7 +7,7 @@
 // import { CART_KEY, cartTotals, getLocalCart } from "../../utils/localCart";
 
 // type Props = {
-//   logoSrc?: string; // optional override, defaults to /logo.png
+//   logoSrc?: string; // optional override
 // };
 
 // function formatKES(amount: number) {
@@ -17,7 +17,6 @@
 // const MainHeader = ({ logoSrc }: Props) => {
 //   const navigate = useNavigate();
 
-//   // ✅ local cart (no login)
 //   const [cart, setCart] = useState(() => getLocalCart());
 
 //   useEffect(() => {
@@ -39,7 +38,10 @@
 //   }, []);
 
 //   const totals = useMemo(() => cartTotals(cart), [cart]);
-//   const finalLogoSrc = logoSrc ?? "/logo.png";
+
+//   // ✅ Vite-safe public asset URL (works on Vercel + sub-paths)
+//   const fallbackLogo = `${import.meta.env.BASE_URL}logo.png`;
+//   const finalLogoSrc = logoSrc ?? fallbackLogo;
 
 //   return (
 //     <header className="w-full bg-white border-b">
@@ -56,9 +58,11 @@
 //               src={finalLogoSrc}
 //               alt="Logo"
 //               className="h-12 w-auto object-contain sm:h-16"
+//               loading="eager"
 //               onError={(e) => {
-//                 if (finalLogoSrc !== "/logo.png") {
-//                   (e.currentTarget as HTMLImageElement).src = "/logo.png";
+//                 // fallback if custom logoSrc fails
+//                 if (finalLogoSrc !== fallbackLogo) {
+//                   (e.currentTarget as HTMLImageElement).src = fallbackLogo;
 //                 }
 //               }}
 //             />
@@ -156,16 +160,13 @@ function formatKES(amount: number) {
 
 const MainHeader = ({ logoSrc }: Props) => {
   const navigate = useNavigate();
-
   const [cart, setCart] = useState(() => getLocalCart());
 
   useEffect(() => {
     const sync = () => setCart(getLocalCart());
-
     sync();
 
     window.addEventListener("local-cart-updated", sync);
-
     const onStorage = (e: StorageEvent) => {
       if (e.key === CART_KEY) sync();
     };
@@ -179,34 +180,45 @@ const MainHeader = ({ logoSrc }: Props) => {
 
   const totals = useMemo(() => cartTotals(cart), [cart]);
 
-  // ✅ Vite-safe public asset URL (works on Vercel + sub-paths)
-  const fallbackLogo = `${import.meta.env.BASE_URL}logo.png`;
-  const finalLogoSrc = logoSrc ?? fallbackLogo;
+  // ✅ Vercel-safe: use absolute public path (you confirmed /logo.png is 200 OK)
+  const fallbackLogo = "/logo.png";
+  const finalLogoSrc = logoSrc?.trim() ? logoSrc : fallbackLogo;
+
+  // ✅ debug (remove later)
+  console.log("Logo src:", finalLogoSrc);
 
   return (
     <header className="w-full bg-white border-b">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between py-4 sm:py-5">
           {/* Logo */}
-          <button
-            type="button"
-            onClick={() => navigate("/")}
-            className="flex items-center"
-            aria-label="Go to homepage"
-          >
-            <img
-              src={finalLogoSrc}
-              alt="Logo"
-              className="h-12 w-auto object-contain sm:h-16"
-              loading="eager"
-              onError={(e) => {
-                // fallback if custom logoSrc fails
-                if (finalLogoSrc !== fallbackLogo) {
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => navigate("/")}
+              className="flex items-center"
+              aria-label="Go to homepage"
+            >
+              <img
+                src={finalLogoSrc}
+                alt="Logo"
+                className="h-12 w-auto object-contain sm:h-16 border border-transparent"
+                loading="eager"
+                onError={(e) => {
+                  // always fallback to /logo.png if anything fails
                   (e.currentTarget as HTMLImageElement).src = fallbackLogo;
-                }
-              }}
+                }}
+              />
+            </button>
+
+            {/* ✅ debug proof image (remove later) */}
+            <img
+              src="/logo.png"
+              alt="Logo debug"
+              className="h-10 w-auto object-contain border border-red-500"
+              loading="eager"
             />
-          </button>
+          </div>
 
           {/* Right side (Account + Cart) */}
           <div className="flex items-center gap-4">
@@ -265,9 +277,7 @@ const MainHeader = ({ logoSrc }: Props) => {
               </div>
 
               <div className="text-right leading-tight">
-                <div className="text-xs text-gray-600">
-                  {totals.count} items
-                </div>
+                <div className="text-xs text-gray-600">{totals.count} items</div>
                 <div className="text-sm font-semibold text-gray-900">
                   {formatKES(totals.total)}
                 </div>

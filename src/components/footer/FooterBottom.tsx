@@ -47,12 +47,12 @@ const FooterBottom = () => {
           </div>
 
           {/* Mpesa */}
-          <img
+          {/* <img
             src="/images/footer/mpesa.png"
             alt="Lipa na Mpesa"
             className="h-10 w-auto"
             loading="lazy"
-          />
+          /> */}
         </div>
       </div>
     </section>

@@ -37,6 +37,7 @@ const FooterTop = () => {
               href="mailto:info@simbacementwholesalesdistributor.co.ke"
               className="mt-6 inline-block text-sm text-blue-600 hover:underline"
             >
+              simbacement775@gmail.com
               info@simbacementwholesalesdistributor.co.ke
             </a>
           </div>

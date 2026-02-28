@@ -41,7 +41,7 @@ const FooterBottom = () => {
 
             <div className="flex items-center gap-4 text-sm text-gray-600">
               <span>M-Pesa</span>
-              <span>Cash on Delivery</span>
+              <span>Cash on Order</span>
               <span>Bank Transfer</span>
             </div>
           </div>

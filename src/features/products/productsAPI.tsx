@@ -52,6 +52,7 @@ export interface ProductResponse {
 
   seller: SellerNestedSchema;
   category?: CategoryNestedSchema | null;
+  max_price?: number | null;
 
   created_at: string; // datetime ISO string
   updated_at: string; // datetime ISO string

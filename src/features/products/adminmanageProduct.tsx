@@ -1,6 +1,7 @@
 
 
 
+
 // // src/admin/AdminProduct.tsx
 // import { useMemo, useRef, useState } from "react";
 // import {
@@ -10,10 +11,7 @@
 //   useUpdateProductMutation,
 // } from "../products/productsAPI";
 
-
-// import {
-//   useListCategoriesQuery,
-// } from ".././categories/catagoriesAPI";
+// import { useListCategoriesQuery } from ".././categories/catagoriesAPI";
 
 // import type {
 //   ProductCreateInput,
@@ -30,7 +28,10 @@
 //   original_price: string;
 //   discount_percentage: string;
 //   stock: string;
-//   image_url: string;
+
+//   image_url: string; // main image
+//   images: string[]; // ✅ extra images (gallery)
+
 //   category_id: string; // store selected category id as string
 // };
 
@@ -48,6 +49,7 @@
 //   discount_percentage: "",
 //   stock: "",
 //   image_url: "",
+//   images: [], // ✅
 //   category_id: "",
 // });
 
@@ -61,7 +63,10 @@
 //       ? Number(s.discount_percentage)
 //       : null,
 //     stock: Number(s.stock),
+
 //     image_url: s.image_url.trim() ? s.image_url.trim() : null,
+//     images: s.images ?? [],
+
 //     category_id: s.category_id.trim() ? Number(s.category_id) : null,
 //   };
 // }
@@ -76,12 +81,27 @@
 //       ? Number(s.discount_percentage)
 //       : null,
 //     stock: s.stock.trim() ? Number(s.stock) : null,
+
 //     image_url: s.image_url.trim() ? s.image_url.trim() : null,
+//     images: s.images ?? [],
+
 //     category_id: s.category_id.trim() ? Number(s.category_id) : null,
 //   };
 // }
 
 // function fromProduct(p: ProductResponse): ProductFormState {
+//   const rawImages = (p as any).images ?? [];
+
+//   const normalizedImages: string[] = Array.isArray(rawImages)
+//     ? rawImages
+//         .map((x: any) => {
+//           if (typeof x === "string") return x;          // already OK
+//           if (x && typeof x === "object") return x.url; // object -> url
+//           return null;
+//         })
+//         .filter((u: any): u is string => typeof u === "string" && u.trim().length > 0)
+//     : [];
+
 //   return {
 //     name: p.name ?? "",
 //     description: p.description ?? "",
@@ -91,6 +111,7 @@
 //       p.discount_percentage == null ? "" : String(p.discount_percentage),
 //     stock: String(p.stock ?? ""),
 //     image_url: p.image_url ?? "",
+//     images: normalizedImages,
 //     category_id: p.category?.id == null ? "" : String(p.category.id),
 //   };
 // }
@@ -110,15 +131,28 @@
 //     return "Discount percentage must be a number.";
 //   if (s.original_price.trim() && Number.isNaN(Number(s.original_price)))
 //     return "Original price must be a number.";
-//   // category optional in your payload; if you want REQUIRED, uncomment:
-//   // if (!s.category_id.trim()) return "Category is required.";
 //   return null;
+// }
+
+// function getApiErrorMessage(e: any): string {
+//   // RTK Query errors often look like: { data: { detail: ... }, status: ... }
+//   const detail = e?.data?.detail;
+//   if (typeof detail === "string" && detail.trim()) return detail;
+
+//   // Some APIs return { message: "..." } or { error: "..." }
+//   const dataMsg = e?.data?.message || e?.data?.error;
+//   if (typeof dataMsg === "string" && dataMsg.trim()) return dataMsg;
+
+//   if (typeof e?.error === "string" && e.error.trim()) return e.error;
+//   if (typeof e?.message === "string" && e.message.trim()) return e.message;
+
+//   return "Something went wrong. Check your API and token.";
 // }
 
 // export default function AdminProduct() {
 //   const { data, isLoading, isFetching, error, refetch } = useListProductsQuery();
 
-//   // ✅ categories (admin selects category from dropdown)
+//   // ✅ categories
 //   const {
 //     data: categoriesData,
 //     isLoading: categoriesLoading,
@@ -139,12 +173,18 @@
 //   const [editing, setEditing] = useState<ProductResponse | null>(null);
 //   const [toast, setToast] = useState<string | null>(null);
 
-//   // ---- Cloudinary upload state ----
+//   // ---- Cloudinary upload state (single image_url) ----
 //   const [uploadingImage, setUploadingImage] = useState(false);
-//   const [imagePreview, setImagePreview] = useState<string | null>(null); // local preview
-//   const [imageCloudUrl, setImageCloudUrl] = useState<string | null>(null); // cloudinary url
+//   const [imagePreview, setImagePreview] = useState<string | null>(null);
+//   const [imageCloudUrl, setImageCloudUrl] = useState<string | null>(null);
 //   const fileInputRef = useRef<HTMLInputElement | null>(null);
-//   const uploadSeq = useRef(0); // prevent races
+//   const uploadSeq = useRef(0);
+
+//   // ---- Cloudinary upload state (multiple images[]) ----
+//   const [uploadingImages, setUploadingImages] = useState(false);
+//   const multiFileInputRef = useRef<HTMLInputElement | null>(null);
+//   const imagesUploadSeq = useRef(0);
+//   const [multiLocalPreviews, setMultiLocalPreviews] = useState<string[]>([]);
 
 //   const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME as string;
 //   const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET as string;
@@ -173,6 +213,15 @@
 //     return data.secure_url as string;
 //   }
 
+//   async function uploadManyToCloudinary(files: File[]): Promise<string[]> {
+//     const urls: string[] = [];
+//     for (const f of files) {
+//       const url = await uploadToCloudinary(f);
+//       urls.push(url);
+//     }
+//     return urls;
+//   }
+
 //   const filtered = useMemo(() => {
 //     const list = data ?? [];
 //     const q = query.trim().toLowerCase();
@@ -194,6 +243,7 @@
 //     categoriesLoading ||
 //     categoriesFetching ||
 //     uploadingImage ||
+//     uploadingImages || // ✅
 //     createMeta.isLoading ||
 //     updateMeta.isLoading ||
 //     deleteMeta.isLoading;
@@ -203,11 +253,11 @@
 //     window.setTimeout(() => setToast(null), 2500);
 //   };
 
-//   const onChange = (key: keyof ProductFormState, value: string) => {
+//   const onChange = (key: keyof ProductFormState, value: any) => {
 //     setForm((prev) => ({ ...prev, [key]: value }));
 //   };
 
-//   const clearImage = () => {
+//   const clearSingleImage = () => {
 //     setImagePreview((prev) => {
 //       if (prev?.startsWith("blob:")) URL.revokeObjectURL(prev);
 //       return null;
@@ -217,11 +267,22 @@
 //     if (fileInputRef.current) fileInputRef.current.value = "";
 //   };
 
+//   const clearMultiPreviews = () => {
+//     setMultiLocalPreviews((prev) => {
+//       prev.forEach((u) => {
+//         if (u.startsWith("blob:")) URL.revokeObjectURL(u);
+//       });
+//       return [];
+//     });
+//     if (multiFileInputRef.current) multiFileInputRef.current.value = "";
+//   };
+
 //   const resetToCreate = () => {
 //     setMode("create");
 //     setEditing(null);
 //     setForm(emptyForm());
-//     clearImage();
+//     clearSingleImage();
+//     clearMultiPreviews();
 //   };
 
 //   const openEdit = (p: ProductResponse) => {
@@ -235,6 +296,8 @@
 //     });
 //     setImageCloudUrl(p.image_url ?? null);
 
+//     clearMultiPreviews();
+
 //     if (fileInputRef.current) fileInputRef.current.value = "";
 
 //     window.setTimeout(() => {
@@ -244,7 +307,7 @@
 //     }, 50);
 //   };
 
-//   // ✅ Upload immediately on file select / drop
+//   // ✅ Upload immediately for main image_url
 //   const handlePickFile = async (file: File | null) => {
 //     if (!file) return;
 
@@ -281,6 +344,54 @@
 //     }
 //   };
 
+//   const addImagesToForm = (urls: string[]) => {
+//     setForm((prev) => ({
+//       ...prev,
+//       images: Array.from(new Set([...(prev.images ?? []), ...urls])),
+//     }));
+//   };
+
+//   // ✅ Upload multiple images[] on select
+//   const handlePickMultipleFiles = async (files: FileList | null) => {
+//     if (!files || files.length === 0) return;
+
+//     const list = Array.from(files);
+//     const imagesOnly = list.filter((f) => f.type.startsWith("image/"));
+//     if (!imagesOnly.length) {
+//       showToast("Please select image files only.");
+//       return;
+//     }
+
+//     // local previews (optional)
+//     const locals = imagesOnly.map((f) => URL.createObjectURL(f));
+//     setMultiLocalPreviews((prev) => [...prev, ...locals]);
+
+//     const mySeq = ++imagesUploadSeq.current;
+
+//     setUploadingImages(true);
+//     try {
+//       showToast(`Uploading ${imagesOnly.length} image(s)…`);
+//       const urls = await uploadManyToCloudinary(imagesOnly);
+
+//       if (mySeq !== imagesUploadSeq.current) return;
+
+//       addImagesToForm(urls);
+//       showToast("Images uploaded.");
+//     } catch (e: any) {
+//       if (mySeq !== imagesUploadSeq.current) return;
+//       showToast(e?.message || "Multi upload failed.");
+//     } finally {
+//       if (mySeq === imagesUploadSeq.current) setUploadingImages(false);
+//     }
+//   };
+
+//   const removeGalleryImage = (idx: number) => {
+//     setForm((prev) => ({
+//       ...prev,
+//       images: prev.images.filter((_, i) => i !== idx),
+//     }));
+//   };
+
 //   const submit = async () => {
 //     const errMsg = isValidForCreate(form);
 //     if (errMsg) {
@@ -288,33 +399,29 @@
 //       return;
 //     }
 
-//     if (uploadingImage) {
-//       showToast("Wait for the image to finish uploading.");
+//     if (uploadingImage || uploadingImages) {
+//       showToast("Wait for the image uploads to finish.");
 //       return;
 //     }
 
 //     try {
 //       if (mode === "create") {
 //         await createProduct(toCreatePayload(form)).unwrap();
-//         showToast("Product created.");
+//         showToast("✅ Product created successfully.");
 //         setForm(emptyForm());
-//         clearImage();
+//         clearSingleImage();
+//         clearMultiPreviews();
 //       } else {
 //         if (!editing) return;
 //         await updateProduct({
 //           product_id: editing.id,
 //           body: toUpdatePayload(form),
 //         }).unwrap();
-//         showToast("Product updated.");
+//         showToast("✅ Product updated successfully.");
 //         resetToCreate();
 //       }
 //     } catch (e: any) {
-//       const msg =
-//         e?.data?.detail ||
-//         e?.error ||
-//         e?.message ||
-//         "Something went wrong. Check your API and token.";
-//       showToast(String(msg));
+//       showToast(`❌ ${mode === "create" ? "Create" : "Update"} failed: ${getApiErrorMessage(e)}`);
 //     }
 //   };
 
@@ -324,14 +431,10 @@
 
 //     try {
 //       await deleteProduct(p.id).unwrap();
-//       showToast("Product deleted.");
+//       showToast("✅ Product deleted successfully.");
 //       if (editing?.id === p.id) resetToCreate();
 //     } catch (e: any) {
-//       const msg =
-//         e?.data?.detail ||
-//         e?.error ||
-//         "Failed to delete. Check your API and token.";
-//       showToast(String(msg));
+//       showToast(`❌ Delete failed: ${getApiErrorMessage(e)}`);
 //     }
 //   };
 
@@ -349,7 +452,7 @@
 //               Admin · Products
 //             </h2>
 //             <p className="mt-1 text-sm text-slate-600">
-//               Pick an image → auto-upload to Cloudinary → preview → save product.
+//               Upload main image + extra images → preview → save product.
 //             </p>
 //           </div>
 
@@ -423,7 +526,7 @@
 //                   <input
 //                     value={form.name}
 //                     onChange={(e) => onChange("name", e.target.value)}
-//                     placeholder="e.g. Nike Air Max"
+//                     placeholder="e.g. Cement 50kg"
 //                     className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
 //                   />
 //                 </label>
@@ -449,7 +552,7 @@
 //                     <input
 //                       value={form.price}
 //                       onChange={(e) => onChange("price", e.target.value)}
-//                       placeholder="e.g. 1200"
+//                       placeholder="e.g. 450"
 //                       inputMode="decimal"
 //                       className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
 //                     />
@@ -462,7 +565,7 @@
 //                     <input
 //                       value={form.stock}
 //                       onChange={(e) => onChange("stock", e.target.value)}
-//                       placeholder="e.g. 45"
+//                       placeholder="e.g. 100"
 //                       inputMode="numeric"
 //                       className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
 //                     />
@@ -499,7 +602,7 @@
 //                   </label>
 //                 </div>
 
-//                 {/* ✅ Category dropdown (no typing IDs) */}
+//                 {/* Category dropdown */}
 //                 <label className="grid gap-1.5">
 //                   <div className="flex items-center justify-between gap-2">
 //                     <span className="text-xs font-bold text-slate-700">
@@ -544,7 +647,6 @@
 //                         ))}
 //                     </select>
 
-//                     {/* chevron */}
 //                     <svg
 //                       className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500"
 //                       viewBox="0 0 20 20"
@@ -558,7 +660,6 @@
 //                     </svg>
 //                   </div>
 
-//                   {/* tiny description preview */}
 //                   {form.category_id && (
 //                     <div className="text-[11px] text-slate-500">
 //                       Selected:{" "}
@@ -570,10 +671,10 @@
 //                   )}
 //                 </label>
 
-//                 {/* ✅ Professional Cloud-like uploader (dropzone) */}
+//                 {/* Main image uploader */}
 //                 <label className="grid gap-2">
 //                   <span className="text-xs font-bold text-slate-700">
-//                     Product image (uploads immediately)
+//                     Main image (image_url) — uploads immediately
 //                   </span>
 
 //                   <div
@@ -659,7 +760,7 @@
 //                               <button
 //                                 type="button"
 //                                 disabled={busy}
-//                                 onClick={clearImage}
+//                                 onClick={clearSingleImage}
 //                                 className="rounded-full bg-red-500/90 px-3 py-1 text-xs font-extrabold text-white hover:bg-red-500 disabled:opacity-60"
 //                               >
 //                                 Remove
@@ -732,6 +833,55 @@
 //                   <input type="hidden" value={form.image_url} readOnly />
 //                 </label>
 
+//                 {/* ✅ Multiple images uploader */}
+//                 <label className="grid gap-2">
+//                   <span className="text-xs font-bold text-slate-700">
+//                     Extra images (images[]) — upload multiple
+//                   </span>
+
+//                   <input
+//                     ref={multiFileInputRef}
+//                     type="file"
+//                     accept="image/*"
+//                     multiple
+//                     disabled={busy}
+//                     className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100 disabled:opacity-60"
+//                     onChange={(e) => handlePickMultipleFiles(e.target.files)}
+//                   />
+
+//                   {(form.images?.length ?? 0) > 0 && (
+//                     <div className="grid grid-cols-3 gap-2">
+//                       {form.images.map((url, idx) => (
+//                         <div
+//                           key={`${url}-${idx}`}
+//                           className="relative overflow-hidden rounded-xl border border-slate-200"
+//                         >
+//                           <img
+//                             src={url}
+//                             className="h-24 w-full object-cover"
+//                             alt=""
+//                           />
+//                           <button
+//                             type="button"
+//                             onClick={() => removeGalleryImage(idx)}
+//                             disabled={busy}
+//                             className="absolute right-1 top-1 rounded-lg bg-red-600/90 px-2 py-1 text-[10px] font-extrabold text-white"
+//                           >
+//                             Remove
+//                           </button>
+//                         </div>
+//                       ))}
+//                     </div>
+//                   )}
+
+//                   {multiLocalPreviews.length > 0 && (
+//                     <p className="text-[11px] text-slate-500">
+//                       Uploading previews added (local). Saved URLs are in{" "}
+//                       <b>images[]</b>.
+//                     </p>
+//                   )}
+//                 </label>
+
 //                 <button
 //                   onClick={submit}
 //                   disabled={busy}
@@ -748,12 +898,12 @@
 
 //                 {createMeta.isError && (
 //                   <div className="text-sm font-bold text-red-600">
-//                     Create failed. Check console/network.
+//                     Create failed.
 //                   </div>
 //                 )}
 //                 {updateMeta.isError && (
 //                   <div className="text-sm font-bold text-red-600">
-//                     Update failed. Check console/network.
+//                     Update failed.
 //                   </div>
 //                 )}
 //               </div>
@@ -959,7 +1109,6 @@
 
 
 
-
 // src/admin/AdminProduct.tsx
 import { useMemo, useRef, useState } from "react";
 import {
@@ -982,13 +1131,16 @@ type FormMode = "create" | "edit";
 type ProductFormState = {
   name: string;
   description: string;
-  price: string;
+
+  price: string; // min price
+  max_price: string; // ✅ NEW: max price (optional)
+
   original_price: string;
   discount_percentage: string;
   stock: string;
 
   image_url: string; // main image
-  images: string[]; // ✅ extra images (gallery)
+  images: string[]; // extra images (gallery)
 
   category_id: string; // store selected category id as string
 };
@@ -1002,20 +1154,28 @@ type Category = {
 const emptyForm = (): ProductFormState => ({
   name: "",
   description: "",
+
   price: "",
+  max_price: "", // ✅
+
   original_price: "",
   discount_percentage: "",
   stock: "",
+
   image_url: "",
-  images: [], // ✅
+  images: [],
   category_id: "",
 });
 
 function toCreatePayload(s: ProductFormState): ProductCreateInput {
+  const max = s.max_price.trim();
   return {
     name: s.name.trim(),
     description: s.description.trim() ? s.description.trim() : null,
+
     price: Number(s.price),
+    max_price: max ? Number(max) : null, // ✅ NEW
+
     original_price: s.original_price.trim() ? Number(s.original_price) : null,
     discount_percentage: s.discount_percentage.trim()
       ? Number(s.discount_percentage)
@@ -1030,10 +1190,22 @@ function toCreatePayload(s: ProductFormState): ProductCreateInput {
 }
 
 function toUpdatePayload(s: ProductFormState): ProductUpdateInput {
+  const max = s.max_price.trim();
+
+  // IMPORTANT:
+  // - sending null will CLEAR max_price if your backend sets it when provided
+  // - if you prefer "do not change max_price unless typed", send undefined instead
+  // Here we send:
+  //   - null when empty (so you can clear)
+  //   - number when filled
+  // If your backend doesn't allow clear, change null -> undefined.
   return {
     name: s.name.trim(),
     description: s.description.trim() ? s.description.trim() : null,
+
     price: s.price.trim() ? Number(s.price) : null,
+    max_price: max ? Number(max) : null, // ✅ NEW
+
     original_price: s.original_price.trim() ? Number(s.original_price) : null,
     discount_percentage: s.discount_percentage.trim()
       ? Number(s.discount_percentage)
@@ -1053,21 +1225,30 @@ function fromProduct(p: ProductResponse): ProductFormState {
   const normalizedImages: string[] = Array.isArray(rawImages)
     ? rawImages
         .map((x: any) => {
-          if (typeof x === "string") return x;          // already OK
-          if (x && typeof x === "object") return x.url; // object -> url
+          if (typeof x === "string") return x;
+          if (x && typeof x === "object") return x.url;
           return null;
         })
-        .filter((u: any): u is string => typeof u === "string" && u.trim().length > 0)
+        .filter(
+          (u: any): u is string =>
+            typeof u === "string" && u.trim().length > 0
+        )
     : [];
+
+  const mp = (p as any).max_price;
 
   return {
     name: p.name ?? "",
     description: p.description ?? "",
-    price: String(p.price ?? ""),
+
+    price: String((p as any).price ?? ""),
+    max_price: mp == null ? "" : String(mp), // ✅ NEW
+
     original_price: p.original_price == null ? "" : String(p.original_price),
     discount_percentage:
       p.discount_percentage == null ? "" : String(p.discount_percentage),
     stock: String(p.stock ?? ""),
+
     image_url: p.image_url ?? "",
     images: normalizedImages,
     category_id: p.category?.id == null ? "" : String(p.category.id),
@@ -1076,28 +1257,39 @@ function fromProduct(p: ProductResponse): ProductFormState {
 
 function isValidForCreate(s: ProductFormState): string | null {
   if (!s.name.trim()) return "Name is required.";
+
   if (!s.price.trim() || Number.isNaN(Number(s.price)))
     return "Price must be a number.";
+  if (Number(s.price) < 0) return "Price cannot be negative.";
+
+  // ✅ validate max_price
+  if (s.max_price.trim()) {
+    if (Number.isNaN(Number(s.max_price))) return "Max price must be a number.";
+    if (Number(s.max_price) < 0) return "Max price cannot be negative.";
+    if (Number(s.max_price) < Number(s.price))
+      return "Max price must be greater than or equal to price.";
+  }
+
   if (!s.stock.trim() || Number.isNaN(Number(s.stock)))
     return "Stock must be a number.";
-  if (Number(s.price) < 0) return "Price cannot be negative.";
   if (Number(s.stock) < 0) return "Stock cannot be negative.";
+
   if (
     s.discount_percentage.trim() &&
     Number.isNaN(Number(s.discount_percentage))
   )
     return "Discount percentage must be a number.";
+
   if (s.original_price.trim() && Number.isNaN(Number(s.original_price)))
     return "Original price must be a number.";
+
   return null;
 }
 
 function getApiErrorMessage(e: any): string {
-  // RTK Query errors often look like: { data: { detail: ... }, status: ... }
   const detail = e?.data?.detail;
   if (typeof detail === "string" && detail.trim()) return detail;
 
-  // Some APIs return { message: "..." } or { error: "..." }
   const dataMsg = e?.data?.message || e?.data?.error;
   if (typeof dataMsg === "string" && dataMsg.trim()) return dataMsg;
 
@@ -1107,10 +1299,16 @@ function getApiErrorMessage(e: any): string {
   return "Something went wrong. Check your API and token.";
 }
 
+function formatPriceRange(p: any): string {
+  const min = p?.price;
+  const max = (p as any)?.max_price;
+  if (max == null || max === "") return String(min ?? "");
+  return `${min} - ${max}`;
+}
+
 export default function AdminProduct() {
   const { data, isLoading, isFetching, error, refetch } = useListProductsQuery();
 
-  // ✅ categories
   const {
     data: categoriesData,
     isLoading: categoriesLoading,
@@ -1201,7 +1399,7 @@ export default function AdminProduct() {
     categoriesLoading ||
     categoriesFetching ||
     uploadingImage ||
-    uploadingImages || // ✅
+    uploadingImages ||
     createMeta.isLoading ||
     updateMeta.isLoading ||
     deleteMeta.isLoading;
@@ -1265,7 +1463,7 @@ export default function AdminProduct() {
     }, 50);
   };
 
-  // ✅ Upload immediately for main image_url
+  // Upload immediately for main image_url
   const handlePickFile = async (file: File | null) => {
     if (!file) return;
 
@@ -1309,7 +1507,7 @@ export default function AdminProduct() {
     }));
   };
 
-  // ✅ Upload multiple images[] on select
+  // Upload multiple images[] on select
   const handlePickMultipleFiles = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
 
@@ -1320,7 +1518,6 @@ export default function AdminProduct() {
       return;
     }
 
-    // local previews (optional)
     const locals = imagesOnly.map((f) => URL.createObjectURL(f));
     setMultiLocalPreviews((prev) => [...prev, ...locals]);
 
@@ -1379,7 +1576,11 @@ export default function AdminProduct() {
         resetToCreate();
       }
     } catch (e: any) {
-      showToast(`❌ ${mode === "create" ? "Create" : "Update"} failed: ${getApiErrorMessage(e)}`);
+      showToast(
+        `❌ ${mode === "create" ? "Create" : "Update"} failed: ${getApiErrorMessage(
+          e
+        )}`
+      );
     }
   };
 
@@ -1502,20 +1703,36 @@ export default function AdminProduct() {
                   />
                 </label>
 
+                {/* ✅ Price range inputs */}
                 <div className="grid gap-3 sm:grid-cols-2">
                   <label className="grid gap-1.5">
                     <span className="text-xs font-bold text-slate-700">
-                      Price * (number)
+                      Price (min) * (number)
                     </span>
                     <input
                       value={form.price}
                       onChange={(e) => onChange("price", e.target.value)}
-                      placeholder="e.g. 450"
+                      placeholder="e.g. 500"
                       inputMode="decimal"
                       className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
                     />
                   </label>
 
+                  <label className="grid gap-1.5">
+                    <span className="text-xs font-bold text-slate-700">
+                      Max price (optional)
+                    </span>
+                    <input
+                      value={form.max_price}
+                      onChange={(e) => onChange("max_price", e.target.value)}
+                      placeholder="e.g. 700"
+                      inputMode="decimal"
+                      className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
+                    />
+                  </label>
+                </div>
+
+                <div className="grid gap-3 sm:grid-cols-2">
                   <label className="grid gap-1.5">
                     <span className="text-xs font-bold text-slate-700">
                       Stock * (number)
@@ -1528,6 +1745,22 @@ export default function AdminProduct() {
                       className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
                     />
                   </label>
+
+                  <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
+                    <div className="text-[11px] font-extrabold text-slate-700">
+                      Display preview
+                    </div>
+                    <div className="mt-1 text-sm font-extrabold text-slate-900">
+                      {form.price
+                        ? form.max_price.trim()
+                          ? `Sh ${form.price} - Sh ${form.max_price}`
+                          : `Sh ${form.price}`
+                        : "—"}
+                    </div>
+                    <div className="mt-1 text-[11px] text-slate-500">
+                      If max price is empty, it behaves like a single price.
+                    </div>
+                  </div>
                 </div>
 
                 <div className="grid gap-3 sm:grid-cols-2">
@@ -1791,7 +2024,7 @@ export default function AdminProduct() {
                   <input type="hidden" value={form.image_url} readOnly />
                 </label>
 
-                {/* ✅ Multiple images uploader */}
+                {/* Multiple images uploader */}
                 <label className="grid gap-2">
                   <span className="text-xs font-bold text-slate-700">
                     Extra images (images[]) — upload multiple
@@ -1814,11 +2047,7 @@ export default function AdminProduct() {
                           key={`${url}-${idx}`}
                           className="relative overflow-hidden rounded-xl border border-slate-200"
                         >
-                          <img
-                            src={url}
-                            className="h-24 w-full object-cover"
-                            alt=""
-                          />
+                          <img src={url} className="h-24 w-full object-cover" alt="" />
                           <button
                             type="button"
                             onClick={() => removeGalleryImage(idx)}
@@ -1834,8 +2063,7 @@ export default function AdminProduct() {
 
                   {multiLocalPreviews.length > 0 && (
                     <p className="text-[11px] text-slate-500">
-                      Uploading previews added (local). Saved URLs are in{" "}
-                      <b>images[]</b>.
+                      Uploading previews added (local). Saved URLs are in <b>images[]</b>.
                     </p>
                   )}
                 </label>
@@ -1855,14 +2083,10 @@ export default function AdminProduct() {
                 </button>
 
                 {createMeta.isError && (
-                  <div className="text-sm font-bold text-red-600">
-                    Create failed.
-                  </div>
+                  <div className="text-sm font-bold text-red-600">Create failed.</div>
                 )}
                 {updateMeta.isError && (
-                  <div className="text-sm font-bold text-red-600">
-                    Update failed.
-                  </div>
+                  <div className="text-sm font-bold text-red-600">Update failed.</div>
                 )}
               </div>
             </div>
@@ -1884,8 +2108,7 @@ export default function AdminProduct() {
               {isLoading && <p className="text-sm text-slate-600">Loading…</p>}
               {error && (
                 <div className="text-sm font-bold text-red-600">
-                  Failed to load products. Make sure VITE_API_BASE_URL is correct
-                  and token exists.
+                  Failed to load products. Make sure VITE_API_BASE_URL is correct and token exists.
                 </div>
               )}
 
@@ -1920,34 +2143,28 @@ export default function AdminProduct() {
                           <div className="font-extrabold">{p.name}</div>
                           <div className="mt-0.5 text-xs text-slate-500">
                             #{p.id} •{" "}
-                            {p.description
-                              ? p.description.slice(0, 48)
-                              : "No description"}
-                            {p.description && p.description.length > 48
-                              ? "…"
-                              : ""}
+                            {p.description ? p.description.slice(0, 48) : "No description"}
+                            {p.description && p.description.length > 48 ? "…" : ""}
                           </div>
                         </td>
                         <td className="whitespace-nowrap px-2 py-3 font-bold">
-                          {p.price}
+                          {/* ✅ show range if max_price exists */}
+                          {formatPriceRange(p)}
                         </td>
-                        <td className="whitespace-nowrap px-2 py-3">
-                          {p.stock}
-                        </td>
+                        <td className="whitespace-nowrap px-2 py-3">{p.stock}</td>
                         <td className="whitespace-nowrap px-2 py-3">
                           <span className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs font-extrabold text-slate-700">
                             {p.discount_percentage ?? 0}%
                           </span>
                         </td>
                         <td className="whitespace-nowrap px-2 py-3">
-                          {p.category?.name ??
-                            (p.category?.id ? `#${p.category.id}` : "—")}
+                          {p.category?.name ?? (p.category?.id ? `#${p.category.id}` : "—")}
                         </td>
                         <td className="whitespace-nowrap px-2 py-3">
                           {p.seller?.name ?? `#${p.seller?.id ?? "—"}`}
                         </td>
                         <td className="whitespace-nowrap px-2 py-3 text-xs text-slate-500">
-                          {new Date(p.updated_at).toLocaleString()}
+                          {new Date((p as any).updated_at).toLocaleString()}
                         </td>
                         <td className="whitespace-nowrap px-2 py-3">
                           <div className="flex flex-wrap gap-2">
@@ -1972,10 +2189,7 @@ export default function AdminProduct() {
 
                     {!isLoading && (filtered?.length ?? 0) === 0 && (
                       <tr>
-                        <td
-                          colSpan={8}
-                          className="px-2 py-4 text-sm text-slate-500"
-                        >
+                        <td colSpan={8} className="px-2 py-4 text-sm text-slate-500">
                           No products found.
                         </td>
                       </tr>
@@ -1997,9 +2211,7 @@ export default function AdminProduct() {
                         <div className="mt-0.5 text-xs text-slate-500">
                           #{p.id} •{" "}
                           {p.category?.name ??
-                            (p.category?.id
-                              ? `#${p.category.id}`
-                              : "No category")}
+                            (p.category?.id ? `#${p.category.id}` : "No category")}
                         </div>
                       </div>
                       <span className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs font-extrabold text-slate-700">
@@ -2009,7 +2221,7 @@ export default function AdminProduct() {
 
                     <div className="mt-2 flex flex-wrap gap-2">
                       <span className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs font-extrabold text-slate-700">
-                        Price: {p.price}
+                        Price: {formatPriceRange(p)}
                       </span>
                       <span className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs font-extrabold text-slate-700">
                         Stock: {p.stock}
@@ -2025,7 +2237,7 @@ export default function AdminProduct() {
 
                     <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
                       <div className="text-xs text-slate-500">
-                        Updated: {new Date(p.updated_at).toLocaleString()}
+                        Updated: {new Date((p as any).updated_at).toLocaleString()}
                       </div>
                       <div className="flex flex-wrap gap-2">
                         <button

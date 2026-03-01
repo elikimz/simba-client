@@ -24,6 +24,7 @@ export interface ProductCreateInput {
   image_url?: string | null;
   images?: string[] | null; // for multiple images, if supported by backend
   category_id?: number | null;
+  max_price?: number | null
 }
 
 export interface ProductUpdateInput {
@@ -36,6 +37,7 @@ export interface ProductUpdateInput {
   image_url?: string | null;
   images?: string[] | null; // for multiple images, if supported by backend
   category_id?: number | null;
+  max_price?: number | null
 }
 
 export interface ProductResponse {

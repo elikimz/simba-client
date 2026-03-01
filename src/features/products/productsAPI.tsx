@@ -22,6 +22,7 @@ export interface ProductCreateInput {
   discount_percentage?: number | null; // default 0.0 on backend
   stock: number;
   image_url?: string | null;
+  images?: string[] | null; // for multiple images, if supported by backend
   category_id?: number | null;
 }
 
@@ -33,6 +34,7 @@ export interface ProductUpdateInput {
   discount_percentage?: number | null;
   stock?: number | null;
   image_url?: string | null;
+  images?: string[] | null; // for multiple images, if supported by backend
   category_id?: number | null;
 }
 

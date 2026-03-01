@@ -1,3 +1,6 @@
+
+
+
 // // src/admin/AdminProduct.tsx
 // import { useMemo, useRef, useState } from "react";
 // import {
@@ -6,6 +9,12 @@
 //   useListProductsQuery,
 //   useUpdateProductMutation,
 // } from "../products/productsAPI";
+
+
+// import {
+//   useListCategoriesQuery,
+// } from ".././categories/catagoriesAPI";
+
 // import type {
 //   ProductCreateInput,
 //   ProductResponse,
@@ -22,7 +31,13 @@
 //   discount_percentage: string;
 //   stock: string;
 //   image_url: string;
-//   category_id: string;
+//   category_id: string; // store selected category id as string
+// };
+
+// type Category = {
+//   id: number;
+//   name: string;
+//   description?: string | null;
 // };
 
 // const emptyForm = (): ProductFormState => ({
@@ -95,11 +110,24 @@
 //     return "Discount percentage must be a number.";
 //   if (s.original_price.trim() && Number.isNaN(Number(s.original_price)))
 //     return "Original price must be a number.";
+//   // category optional in your payload; if you want REQUIRED, uncomment:
+//   // if (!s.category_id.trim()) return "Category is required.";
 //   return null;
 // }
 
 // export default function AdminProduct() {
 //   const { data, isLoading, isFetching, error, refetch } = useListProductsQuery();
+
+//   // ✅ categories (admin selects category from dropdown)
+//   const {
+//     data: categoriesData,
+//     isLoading: categoriesLoading,
+//     isFetching: categoriesFetching,
+//     error: categoriesError,
+//     refetch: refetchCategories,
+//   } = useListCategoriesQuery();
+
+//   const categories = (categoriesData ?? []) as Category[];
 
 //   const [createProduct, createMeta] = useCreateProductMutation();
 //   const [updateProduct, updateMeta] = useUpdateProductMutation();
@@ -163,6 +191,8 @@
 //   const busy =
 //     isLoading ||
 //     isFetching ||
+//     categoriesLoading ||
+//     categoriesFetching ||
 //     uploadingImage ||
 //     createMeta.isLoading ||
 //     updateMeta.isLoading ||
@@ -179,7 +209,6 @@
 
 //   const clearImage = () => {
 //     setImagePreview((prev) => {
-//       // cleanup local blob url if any
 //       if (prev?.startsWith("blob:")) URL.revokeObjectURL(prev);
 //       return null;
 //     });
@@ -224,7 +253,6 @@
 //       return;
 //     }
 
-//     // local preview instantly
 //     const localUrl = URL.createObjectURL(file);
 //     setImagePreview((prev) => {
 //       if (prev?.startsWith("blob:")) URL.revokeObjectURL(prev);
@@ -325,13 +353,24 @@
 //             </p>
 //           </div>
 
-//           <button
-//             onClick={() => refetch()}
-//             disabled={busy}
-//             className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold shadow-sm transition hover:bg-slate-50 disabled:opacity-60"
-//           >
-//             {isFetching ? "Refreshing…" : "Refresh"}
-//           </button>
+//           <div className="flex items-center gap-2">
+//             <button
+//               onClick={() => refetch()}
+//               disabled={busy}
+//               className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold shadow-sm transition hover:bg-slate-50 disabled:opacity-60"
+//             >
+//               {isFetching ? "Refreshing…" : "Refresh products"}
+//             </button>
+
+//             <button
+//               onClick={() => refetchCategories()}
+//               disabled={busy}
+//               className="hidden sm:inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold shadow-sm transition hover:bg-slate-50 disabled:opacity-60"
+//               title="Reload categories"
+//             >
+//               {categoriesFetching ? "Refreshing…" : "Refresh categories"}
+//             </button>
+//           </div>
 //         </div>
 
 //         {/* Toast */}
@@ -460,6 +499,77 @@
 //                   </label>
 //                 </div>
 
+//                 {/* ✅ Category dropdown (no typing IDs) */}
+//                 <label className="grid gap-1.5">
+//                   <div className="flex items-center justify-between gap-2">
+//                     <span className="text-xs font-bold text-slate-700">
+//                       Category
+//                     </span>
+
+//                     {categoriesError ? (
+//                       <span className="text-[11px] font-bold text-red-600">
+//                         Failed to load categories
+//                       </span>
+//                     ) : categoriesLoading || categoriesFetching ? (
+//                       <span className="text-[11px] font-bold text-slate-500">
+//                         Loading…
+//                       </span>
+//                     ) : (
+//                       <span className="text-[11px] text-slate-500">
+//                         {categories.length} available
+//                       </span>
+//                     )}
+//                   </div>
+
+//                   <div className="relative">
+//                     <select
+//                       value={form.category_id}
+//                       onChange={(e) => onChange("category_id", e.target.value)}
+//                       disabled={categoriesLoading || categoriesFetching}
+//                       className="w-full appearance-none rounded-xl border border-slate-200 bg-white px-3 py-2 pr-10 text-sm outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100 disabled:opacity-60"
+//                     >
+//                       <option value="">
+//                         {categoriesLoading || categoriesFetching
+//                           ? "Loading categories…"
+//                           : "Select category (optional)"}
+//                       </option>
+
+//                       {categories
+//                         .slice()
+//                         .sort((a, b) => a.name.localeCompare(b.name))
+//                         .map((c) => (
+//                           <option key={c.id} value={String(c.id)}>
+//                             {c.name}
+//                           </option>
+//                         ))}
+//                     </select>
+
+//                     {/* chevron */}
+//                     <svg
+//                       className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500"
+//                       viewBox="0 0 20 20"
+//                       fill="currentColor"
+//                     >
+//                       <path
+//                         fillRule="evenodd"
+//                         d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z"
+//                         clipRule="evenodd"
+//                       />
+//                     </svg>
+//                   </div>
+
+//                   {/* tiny description preview */}
+//                   {form.category_id && (
+//                     <div className="text-[11px] text-slate-500">
+//                       Selected:{" "}
+//                       <span className="font-extrabold text-slate-700">
+//                         {categories.find((c) => String(c.id) === form.category_id)
+//                           ?.name ?? `#${form.category_id}`}
+//                       </span>
+//                     </div>
+//                   )}
+//                 </label>
+
 //                 {/* ✅ Professional Cloud-like uploader (dropzone) */}
 //                 <label className="grid gap-2">
 //                   <span className="text-xs font-bold text-slate-700">
@@ -483,7 +593,6 @@
 //                       if (f) handlePickFile(f);
 //                     }}
 //                   >
-//                     {/* hidden input */}
 //                     <input
 //                       ref={fileInputRef}
 //                       type="file"
@@ -494,7 +603,6 @@
 //                       }
 //                     />
 
-//                     {/* Upload overlay */}
 //                     {uploadingImage && (
 //                       <div className="absolute inset-0 z-10 flex items-center justify-center rounded-2xl bg-white/70 backdrop-blur">
 //                         <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-2 shadow-sm">
@@ -506,7 +614,6 @@
 //                       </div>
 //                     )}
 
-//                     {/* With preview */}
 //                     {previewSrc ? (
 //                       <div className="grid w-full gap-3">
 //                         <div className="relative overflow-hidden rounded-2xl border border-slate-200">
@@ -562,7 +669,7 @@
 //                         </div>
 
 //                         <p className="text-[11px] text-slate-500">
-//                           Drag & drop an image here, or{" "}
+//                           Drag & drop, or{" "}
 //                           <button
 //                             type="button"
 //                             onClick={() => fileInputRef.current?.click()}
@@ -574,7 +681,6 @@
 //                         </p>
 //                       </div>
 //                     ) : (
-//                       // Empty state (cloud + arrow)
 //                       <div className="flex flex-col items-center gap-3">
 //                         <div className="grid h-12 w-12 place-items-center rounded-2xl border border-slate-200 bg-slate-50 text-slate-700 shadow-sm transition group-hover:border-blue-200 group-hover:bg-blue-50">
 //                           <svg
@@ -624,19 +730,6 @@
 //                   </div>
 
 //                   <input type="hidden" value={form.image_url} readOnly />
-//                 </label>
-
-//                 <label className="grid gap-1.5">
-//                   <span className="text-xs font-bold text-slate-700">
-//                     Category ID
-//                   </span>
-//                   <input
-//                     value={form.category_id}
-//                     onChange={(e) => onChange("category_id", e.target.value)}
-//                     placeholder="Optional numeric id"
-//                     inputMode="numeric"
-//                     className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
-//                   />
 //                 </label>
 
 //                 <button
@@ -796,7 +889,9 @@
 //                         <div className="mt-0.5 text-xs text-slate-500">
 //                           #{p.id} •{" "}
 //                           {p.category?.name ??
-//                             (p.category?.id ? `#${p.category.id}` : "No category")}
+//                             (p.category?.id
+//                               ? `#${p.category.id}`
+//                               : "No category")}
 //                         </div>
 //                       </div>
 //                       <span className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-xs font-extrabold text-slate-700">
@@ -864,6 +959,7 @@
 
 
 
+
 // src/admin/AdminProduct.tsx
 import { useMemo, useRef, useState } from "react";
 import {
@@ -873,10 +969,7 @@ import {
   useUpdateProductMutation,
 } from "../products/productsAPI";
 
-
-import {
-  useListCategoriesQuery,
-} from ".././categories/catagoriesAPI";
+import { useListCategoriesQuery } from ".././categories/catagoriesAPI";
 
 import type {
   ProductCreateInput,
@@ -893,7 +986,10 @@ type ProductFormState = {
   original_price: string;
   discount_percentage: string;
   stock: string;
-  image_url: string;
+
+  image_url: string; // main image
+  images: string[]; // ✅ extra images (gallery)
+
   category_id: string; // store selected category id as string
 };
 
@@ -911,6 +1007,7 @@ const emptyForm = (): ProductFormState => ({
   discount_percentage: "",
   stock: "",
   image_url: "",
+  images: [], // ✅
   category_id: "",
 });
 
@@ -924,7 +1021,10 @@ function toCreatePayload(s: ProductFormState): ProductCreateInput {
       ? Number(s.discount_percentage)
       : null,
     stock: Number(s.stock),
+
     image_url: s.image_url.trim() ? s.image_url.trim() : null,
+    images: s.images ?? [],
+
     category_id: s.category_id.trim() ? Number(s.category_id) : null,
   };
 }
@@ -939,12 +1039,27 @@ function toUpdatePayload(s: ProductFormState): ProductUpdateInput {
       ? Number(s.discount_percentage)
       : null,
     stock: s.stock.trim() ? Number(s.stock) : null,
+
     image_url: s.image_url.trim() ? s.image_url.trim() : null,
+    images: s.images ?? [],
+
     category_id: s.category_id.trim() ? Number(s.category_id) : null,
   };
 }
 
 function fromProduct(p: ProductResponse): ProductFormState {
+  const rawImages = (p as any).images ?? [];
+
+  const normalizedImages: string[] = Array.isArray(rawImages)
+    ? rawImages
+        .map((x: any) => {
+          if (typeof x === "string") return x;          // already OK
+          if (x && typeof x === "object") return x.url; // object -> url
+          return null;
+        })
+        .filter((u: any): u is string => typeof u === "string" && u.trim().length > 0)
+    : [];
+
   return {
     name: p.name ?? "",
     description: p.description ?? "",
@@ -954,6 +1069,7 @@ function fromProduct(p: ProductResponse): ProductFormState {
       p.discount_percentage == null ? "" : String(p.discount_percentage),
     stock: String(p.stock ?? ""),
     image_url: p.image_url ?? "",
+    images: normalizedImages,
     category_id: p.category?.id == null ? "" : String(p.category.id),
   };
 }
@@ -973,15 +1089,28 @@ function isValidForCreate(s: ProductFormState): string | null {
     return "Discount percentage must be a number.";
   if (s.original_price.trim() && Number.isNaN(Number(s.original_price)))
     return "Original price must be a number.";
-  // category optional in your payload; if you want REQUIRED, uncomment:
-  // if (!s.category_id.trim()) return "Category is required.";
   return null;
+}
+
+function getApiErrorMessage(e: any): string {
+  // RTK Query errors often look like: { data: { detail: ... }, status: ... }
+  const detail = e?.data?.detail;
+  if (typeof detail === "string" && detail.trim()) return detail;
+
+  // Some APIs return { message: "..." } or { error: "..." }
+  const dataMsg = e?.data?.message || e?.data?.error;
+  if (typeof dataMsg === "string" && dataMsg.trim()) return dataMsg;
+
+  if (typeof e?.error === "string" && e.error.trim()) return e.error;
+  if (typeof e?.message === "string" && e.message.trim()) return e.message;
+
+  return "Something went wrong. Check your API and token.";
 }
 
 export default function AdminProduct() {
   const { data, isLoading, isFetching, error, refetch } = useListProductsQuery();
 
-  // ✅ categories (admin selects category from dropdown)
+  // ✅ categories
   const {
     data: categoriesData,
     isLoading: categoriesLoading,
@@ -1002,12 +1131,18 @@ export default function AdminProduct() {
   const [editing, setEditing] = useState<ProductResponse | null>(null);
   const [toast, setToast] = useState<string | null>(null);
 
-  // ---- Cloudinary upload state ----
+  // ---- Cloudinary upload state (single image_url) ----
   const [uploadingImage, setUploadingImage] = useState(false);
-  const [imagePreview, setImagePreview] = useState<string | null>(null); // local preview
-  const [imageCloudUrl, setImageCloudUrl] = useState<string | null>(null); // cloudinary url
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageCloudUrl, setImageCloudUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const uploadSeq = useRef(0); // prevent races
+  const uploadSeq = useRef(0);
+
+  // ---- Cloudinary upload state (multiple images[]) ----
+  const [uploadingImages, setUploadingImages] = useState(false);
+  const multiFileInputRef = useRef<HTMLInputElement | null>(null);
+  const imagesUploadSeq = useRef(0);
+  const [multiLocalPreviews, setMultiLocalPreviews] = useState<string[]>([]);
 
   const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME as string;
   const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET as string;
@@ -1036,6 +1171,15 @@ export default function AdminProduct() {
     return data.secure_url as string;
   }
 
+  async function uploadManyToCloudinary(files: File[]): Promise<string[]> {
+    const urls: string[] = [];
+    for (const f of files) {
+      const url = await uploadToCloudinary(f);
+      urls.push(url);
+    }
+    return urls;
+  }
+
   const filtered = useMemo(() => {
     const list = data ?? [];
     const q = query.trim().toLowerCase();
@@ -1057,6 +1201,7 @@ export default function AdminProduct() {
     categoriesLoading ||
     categoriesFetching ||
     uploadingImage ||
+    uploadingImages || // ✅
     createMeta.isLoading ||
     updateMeta.isLoading ||
     deleteMeta.isLoading;
@@ -1066,11 +1211,11 @@ export default function AdminProduct() {
     window.setTimeout(() => setToast(null), 2500);
   };
 
-  const onChange = (key: keyof ProductFormState, value: string) => {
+  const onChange = (key: keyof ProductFormState, value: any) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
-  const clearImage = () => {
+  const clearSingleImage = () => {
     setImagePreview((prev) => {
       if (prev?.startsWith("blob:")) URL.revokeObjectURL(prev);
       return null;
@@ -1080,11 +1225,22 @@ export default function AdminProduct() {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
+  const clearMultiPreviews = () => {
+    setMultiLocalPreviews((prev) => {
+      prev.forEach((u) => {
+        if (u.startsWith("blob:")) URL.revokeObjectURL(u);
+      });
+      return [];
+    });
+    if (multiFileInputRef.current) multiFileInputRef.current.value = "";
+  };
+
   const resetToCreate = () => {
     setMode("create");
     setEditing(null);
     setForm(emptyForm());
-    clearImage();
+    clearSingleImage();
+    clearMultiPreviews();
   };
 
   const openEdit = (p: ProductResponse) => {
@@ -1098,6 +1254,8 @@ export default function AdminProduct() {
     });
     setImageCloudUrl(p.image_url ?? null);
 
+    clearMultiPreviews();
+
     if (fileInputRef.current) fileInputRef.current.value = "";
 
     window.setTimeout(() => {
@@ -1107,7 +1265,7 @@ export default function AdminProduct() {
     }, 50);
   };
 
-  // ✅ Upload immediately on file select / drop
+  // ✅ Upload immediately for main image_url
   const handlePickFile = async (file: File | null) => {
     if (!file) return;
 
@@ -1144,6 +1302,54 @@ export default function AdminProduct() {
     }
   };
 
+  const addImagesToForm = (urls: string[]) => {
+    setForm((prev) => ({
+      ...prev,
+      images: Array.from(new Set([...(prev.images ?? []), ...urls])),
+    }));
+  };
+
+  // ✅ Upload multiple images[] on select
+  const handlePickMultipleFiles = async (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+
+    const list = Array.from(files);
+    const imagesOnly = list.filter((f) => f.type.startsWith("image/"));
+    if (!imagesOnly.length) {
+      showToast("Please select image files only.");
+      return;
+    }
+
+    // local previews (optional)
+    const locals = imagesOnly.map((f) => URL.createObjectURL(f));
+    setMultiLocalPreviews((prev) => [...prev, ...locals]);
+
+    const mySeq = ++imagesUploadSeq.current;
+
+    setUploadingImages(true);
+    try {
+      showToast(`Uploading ${imagesOnly.length} image(s)…`);
+      const urls = await uploadManyToCloudinary(imagesOnly);
+
+      if (mySeq !== imagesUploadSeq.current) return;
+
+      addImagesToForm(urls);
+      showToast("Images uploaded.");
+    } catch (e: any) {
+      if (mySeq !== imagesUploadSeq.current) return;
+      showToast(e?.message || "Multi upload failed.");
+    } finally {
+      if (mySeq === imagesUploadSeq.current) setUploadingImages(false);
+    }
+  };
+
+  const removeGalleryImage = (idx: number) => {
+    setForm((prev) => ({
+      ...prev,
+      images: prev.images.filter((_, i) => i !== idx),
+    }));
+  };
+
   const submit = async () => {
     const errMsg = isValidForCreate(form);
     if (errMsg) {
@@ -1151,33 +1357,29 @@ export default function AdminProduct() {
       return;
     }
 
-    if (uploadingImage) {
-      showToast("Wait for the image to finish uploading.");
+    if (uploadingImage || uploadingImages) {
+      showToast("Wait for the image uploads to finish.");
       return;
     }
 
     try {
       if (mode === "create") {
         await createProduct(toCreatePayload(form)).unwrap();
-        showToast("Product created.");
+        showToast("✅ Product created successfully.");
         setForm(emptyForm());
-        clearImage();
+        clearSingleImage();
+        clearMultiPreviews();
       } else {
         if (!editing) return;
         await updateProduct({
           product_id: editing.id,
           body: toUpdatePayload(form),
         }).unwrap();
-        showToast("Product updated.");
+        showToast("✅ Product updated successfully.");
         resetToCreate();
       }
     } catch (e: any) {
-      const msg =
-        e?.data?.detail ||
-        e?.error ||
-        e?.message ||
-        "Something went wrong. Check your API and token.";
-      showToast(String(msg));
+      showToast(`❌ ${mode === "create" ? "Create" : "Update"} failed: ${getApiErrorMessage(e)}`);
     }
   };
 
@@ -1187,14 +1389,10 @@ export default function AdminProduct() {
 
     try {
       await deleteProduct(p.id).unwrap();
-      showToast("Product deleted.");
+      showToast("✅ Product deleted successfully.");
       if (editing?.id === p.id) resetToCreate();
     } catch (e: any) {
-      const msg =
-        e?.data?.detail ||
-        e?.error ||
-        "Failed to delete. Check your API and token.";
-      showToast(String(msg));
+      showToast(`❌ Delete failed: ${getApiErrorMessage(e)}`);
     }
   };
 
@@ -1212,7 +1410,7 @@ export default function AdminProduct() {
               Admin · Products
             </h2>
             <p className="mt-1 text-sm text-slate-600">
-              Pick an image → auto-upload to Cloudinary → preview → save product.
+              Upload main image + extra images → preview → save product.
             </p>
           </div>
 
@@ -1286,7 +1484,7 @@ export default function AdminProduct() {
                   <input
                     value={form.name}
                     onChange={(e) => onChange("name", e.target.value)}
-                    placeholder="e.g. Nike Air Max"
+                    placeholder="e.g. Cement 50kg"
                     className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
                   />
                 </label>
@@ -1312,7 +1510,7 @@ export default function AdminProduct() {
                     <input
                       value={form.price}
                       onChange={(e) => onChange("price", e.target.value)}
-                      placeholder="e.g. 1200"
+                      placeholder="e.g. 450"
                       inputMode="decimal"
                       className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
                     />
@@ -1325,7 +1523,7 @@ export default function AdminProduct() {
                     <input
                       value={form.stock}
                       onChange={(e) => onChange("stock", e.target.value)}
-                      placeholder="e.g. 45"
+                      placeholder="e.g. 100"
                       inputMode="numeric"
                       className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100"
                     />
@@ -1362,7 +1560,7 @@ export default function AdminProduct() {
                   </label>
                 </div>
 
-                {/* ✅ Category dropdown (no typing IDs) */}
+                {/* Category dropdown */}
                 <label className="grid gap-1.5">
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-xs font-bold text-slate-700">
@@ -1407,7 +1605,6 @@ export default function AdminProduct() {
                         ))}
                     </select>
 
-                    {/* chevron */}
                     <svg
                       className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500"
                       viewBox="0 0 20 20"
@@ -1421,7 +1618,6 @@ export default function AdminProduct() {
                     </svg>
                   </div>
 
-                  {/* tiny description preview */}
                   {form.category_id && (
                     <div className="text-[11px] text-slate-500">
                       Selected:{" "}
@@ -1433,10 +1629,10 @@ export default function AdminProduct() {
                   )}
                 </label>
 
-                {/* ✅ Professional Cloud-like uploader (dropzone) */}
+                {/* Main image uploader */}
                 <label className="grid gap-2">
                   <span className="text-xs font-bold text-slate-700">
-                    Product image (uploads immediately)
+                    Main image (image_url) — uploads immediately
                   </span>
 
                   <div
@@ -1522,7 +1718,7 @@ export default function AdminProduct() {
                               <button
                                 type="button"
                                 disabled={busy}
-                                onClick={clearImage}
+                                onClick={clearSingleImage}
                                 className="rounded-full bg-red-500/90 px-3 py-1 text-xs font-extrabold text-white hover:bg-red-500 disabled:opacity-60"
                               >
                                 Remove
@@ -1595,6 +1791,55 @@ export default function AdminProduct() {
                   <input type="hidden" value={form.image_url} readOnly />
                 </label>
 
+                {/* ✅ Multiple images uploader */}
+                <label className="grid gap-2">
+                  <span className="text-xs font-bold text-slate-700">
+                    Extra images (images[]) — upload multiple
+                  </span>
+
+                  <input
+                    ref={multiFileInputRef}
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    disabled={busy}
+                    className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-blue-300 focus:ring-4 focus:ring-blue-100 disabled:opacity-60"
+                    onChange={(e) => handlePickMultipleFiles(e.target.files)}
+                  />
+
+                  {(form.images?.length ?? 0) > 0 && (
+                    <div className="grid grid-cols-3 gap-2">
+                      {form.images.map((url, idx) => (
+                        <div
+                          key={`${url}-${idx}`}
+                          className="relative overflow-hidden rounded-xl border border-slate-200"
+                        >
+                          <img
+                            src={url}
+                            className="h-24 w-full object-cover"
+                            alt=""
+                          />
+                          <button
+                            type="button"
+                            onClick={() => removeGalleryImage(idx)}
+                            disabled={busy}
+                            className="absolute right-1 top-1 rounded-lg bg-red-600/90 px-2 py-1 text-[10px] font-extrabold text-white"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {multiLocalPreviews.length > 0 && (
+                    <p className="text-[11px] text-slate-500">
+                      Uploading previews added (local). Saved URLs are in{" "}
+                      <b>images[]</b>.
+                    </p>
+                  )}
+                </label>
+
                 <button
                   onClick={submit}
                   disabled={busy}
@@ -1611,12 +1856,12 @@ export default function AdminProduct() {
 
                 {createMeta.isError && (
                   <div className="text-sm font-bold text-red-600">
-                    Create failed. Check console/network.
+                    Create failed.
                   </div>
                 )}
                 {updateMeta.isError && (
                   <div className="text-sm font-bold text-red-600">
-                    Update failed. Check console/network.
+                    Update failed.
                   </div>
                 )}
               </div>

@@ -77,7 +77,6 @@
 
 // src/components/WhyMaisha.tsx
 import { useMemo } from "react";
-import { useNavigate } from "react-router-dom";
 import { useListActiveBannersQuery } from "../../features/banner/bannerAPI"; // ✅ adjust path
 
 const reasons = [
@@ -105,7 +104,6 @@ function pickBannerImageUrl(banner: any): string | null {
 }
 
 const WhyMaisha = () => {
-  const navigate = useNavigate();
 
   const { data: banners, isLoading, isError } = useListActiveBannersQuery();
 
@@ -124,8 +122,8 @@ const WhyMaisha = () => {
       description:
         b.description ??
         "We supply genuine Simba Cement and quality building materials suitable for all construction needs.",
-      ctaText: b.cta_text ?? "Shop Now",
-      ctaHref: b.cta_href ?? "/products",
+      // ctaText: b.cta_text ?? "Shop Now",
+      // ctaHref: b.cta_href ?? "/products",
     };
   }, [banners]);
 
@@ -165,12 +163,12 @@ const WhyMaisha = () => {
                 {hero.description}
               </p>
 
-              <button
+              {/* <button
                 onClick={() => navigate(hero.ctaHref)}
                 className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-white/90 hover:text-white"
               >
                 {hero.ctaText} <span className="text-lg leading-none">→</span>
-              </button>
+              </button> */}
             </div>
           </div>
 

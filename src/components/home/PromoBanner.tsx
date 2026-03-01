@@ -105,7 +105,7 @@ const PromoBanner = () => {
                 onClick={() => navigate("/signin")}
                 className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-white/90 hover:text-white"
               >
-                Order Now <span className="text-lg leading-none">→</span>
+                {/* Order Now <span className="text-lg leading-none">→</span> */}
               </button>
             </div>
           </div>

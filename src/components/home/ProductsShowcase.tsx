@@ -1,6 +1,5 @@
 
 
-
 // // src/components/ProductsShowcase.tsx
 // import React from "react";
 // import ProductCard from "./ProductCard";
@@ -75,12 +74,12 @@
 //         {/* Heading */}
 //         <div className="text-center">
 //           <h2 className="text-3xl font-extrabold tracking-wide text-indigo-900 md:text-4xl">
-//             MAISHA MABATI PRODUCTS
+//             SIMBA CEMENT & BUILDING MATERIALS
 //           </h2>
 //           <p className="mx-auto mt-4 max-w-5xl text-base font-semibold text-gray-800">
-//             Our high quality, KEBS standard roofing sheets are durable, functional
-//             and strong with a wide variety to meet every customer need whether
-//             on-demand or custom
+//             Order genuine Simba Cement and quality construction materials including steel,
+//             sand, ballast, nails, binding wire, roofing sheets and more — available for
+//             bulk and retail supply with reliable delivery.
 //           </p>
 //         </div>
 
@@ -128,15 +127,16 @@
 //             <div className="text-6xl font-extrabold tracking-tight">-5%</div>
 
 //             <div className="mt-10 text-base font-semibold text-white/80">
-//               Only This Week
+//               This Week Only
 //             </div>
 
 //             <div className="mt-3 text-3xl font-extrabold leading-snug">
-//               Across All Products
+//               Bulk Deals Available
 //             </div>
 
 //             <p className="mt-4 text-sm leading-relaxed text-white/70">
-//               Shop our Products and get up to 5% Off and Free shipping
+//               Order cement and building materials today and enjoy up to 5% Off on
+//               selected items. Fast delivery available.
 //             </p>
 
 //             <button className="mt-10 inline-flex items-center gap-3 text-sm font-semibold text-white/90 hover:text-white">
@@ -161,29 +161,47 @@
 // export default ProductsShowcase;
 
 
-
-
 // src/components/ProductsShowcase.tsx
 import React from "react";
 import ProductCard from "./ProductCard";
 import { useListProductsQuery } from "../../features/products/productsAPI";
 
-function formatKES(amount: number) {
-  return `KSh${Number(amount || 0).toLocaleString()}.00`;
+const fallbackImage = "/images/about-roof.jpg";
+
+function toNumber(v: unknown): number | null {
+  if (v == null) return null;
+  if (typeof v === "number") return Number.isFinite(v) ? v : null;
+  if (typeof v === "string") {
+    const t = v.trim();
+    if (!t) return null;
+    const cleaned = t.replace(/,/g, "").replace(/[^\d.]+/g, "");
+    if (!cleaned) return null;
+    const n = Number(cleaned);
+    return Number.isFinite(n) ? n : null;
+  }
+  return null;
 }
 
-const fallbackImage = "/images/about-roof.jpg";
+/**
+ * For sorting:
+ * - use max_price when present (because that's the upper end of the range)
+ * - otherwise use normal price
+ */
+function sortPriceValue(p: any): number {
+  const maxP = toNumber(p?.max_price);
+  if (maxP != null) return maxP;
+  const minP = toNumber(p?.price);
+  return minP ?? 0;
+}
 
 const ProductsShowcase = () => {
   const { data, isLoading, isError } = useListProductsQuery();
 
-  // ✅ Hooks always run (safe)
   const [selectedCategory, setSelectedCategory] = React.useState<string>("all");
   const [sort, setSort] = React.useState<
     "latest" | "name_asc" | "name_desc" | "price_asc" | "price_desc"
   >("latest");
 
-  // ✅ Silent mode: don't show anything on loading/error/empty
   const allProducts = data ?? [];
   if (isLoading || isError || allProducts.length === 0) {
     return null;
@@ -191,7 +209,7 @@ const ProductsShowcase = () => {
 
   // ✅ build categories
   const categoryMap = new Map<string, string>();
-  allProducts.forEach((p) => {
+  allProducts.forEach((p: any) => {
     if (p.category?.id != null) {
       categoryMap.set(String(p.category.id), p.category.name ?? "Category");
     }
@@ -203,32 +221,54 @@ const ProductsShowcase = () => {
       .sort((a, b) => a.name.localeCompare(b.name))
   );
 
-  // ✅ filter + sort
-  const filtered = allProducts.filter((p) => {
+  // ✅ filter
+  const filtered = allProducts.filter((p: any) => {
     if (selectedCategory === "all") return true;
     return String(p.category?.id ?? "") === selectedCategory;
   });
 
-  const sorted = [...filtered].sort((a, b) => {
+  // ✅ sort
+  const sorted = [...filtered].sort((a: any, b: any) => {
     if (sort === "name_asc") return a.name.localeCompare(b.name);
     if (sort === "name_desc") return b.name.localeCompare(a.name);
-    if (sort === "price_asc") return a.price - b.price;
-    if (sort === "price_desc") return b.price - a.price;
+
+    if (sort === "price_asc") return sortPriceValue(a) - sortPriceValue(b);
+    if (sort === "price_desc") return sortPriceValue(b) - sortPriceValue(a);
 
     const da = new Date(a.created_at).getTime();
     const db = new Date(b.created_at).getTime();
     return db - da;
   });
 
-  const products = sorted.map((p) => ({
-    id: p.id,
-    image: p.image_url || fallbackImage,
-    name: p.name,
-    price: formatKES(p.price),
-    inStock: (p.stock ?? 0) > 0,
-  }));
+  // ✅ IMPORTANT: pass raw price + max_price through to ProductCard
+  const products = sorted.map((p: any) => {
+    const mapped = {
+      id: p.id,
+      image: p.image_url || fallbackImage,
+      name: p.name,
 
-  // ✅ Silent mode: if filters remove everything, hide whole section
+      // ✅ let ProductCard format and show range
+      price: p.price,
+      max_price: p.max_price ?? null,
+
+      inStock: (p.stock ?? 0) > 0,
+      categoryName: p.category?.name ?? undefined,
+      availableInText: p.available_in_text ?? undefined,
+    };
+
+    // ✅ Debug (remove later)
+    console.log("[ProductsShowcase] map -> ProductCard props:", {
+      id: mapped.id,
+      name: mapped.name,
+      price: mapped.price,
+      max_price: mapped.max_price,
+      priceType: typeof mapped.price,
+      maxPriceType: typeof mapped.max_price,
+    });
+
+    return mapped;
+  });
+
   if (products.length === 0) return null;
 
   return (

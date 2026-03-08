@@ -1,31 +1,33 @@
-
-
-
 import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
+// Pages
 import HomePage from "../src/pages/homepage";
 import ErrorPage from "./components/layout/ErrorPage";
-import RegisterPage from "./features/register/register";
-import Login from "./features/login/login";
 import UserDashboard from "./pages/UserDashboard";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
 import CartPage from "./pages/CartPage";
+import Blog from "./pages/blog";
+import AdminLayout from "./pages/admimlayout";
+
+// Auth Features
+import RegisterPage from "./features/register/register";
+import Login from "./features/login/login";
+import ForgotPassword from "./features/settings/settings";
+
+// User Features
 import AddressesPage from "./features/addresses/address";
 import OrdersPage from "./features/order/order";
-import ForgotPassword from "./features/settings/settings";
+import UserContacts from "./features/contacts/contacts";
+import UserSetting from "./features/settings/passoword";
+
+// Admin Features
 import AdminProduct from "./features/products/adminmanageProduct";
 import AdminManageCategories from "./features/categories/categories";
-// ✅ Admin
-import AdminLayout from "./pages/admimlayout";
 import AdminManageDeals from "./features/deals/AdminManagedeals";
 import AdminManagebanner from "./features/banner/AdminManagebanner";
 import AdminManageOrders from "./features/order/adminmanageorder";
 import AdminManageContacts from "./features/contacts/adminmanagecontacts";
-import UserContacts from "./features/contacts/contacts";
-import UserSetting from "./features/settings/passoword";
-import Blog from "./pages/blog";
-
 
 const router = createBrowserRouter([
   {
@@ -44,79 +46,86 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path: "/user/dashboard",
-    element: <UserDashboard />,
+    path: "/forgot-password",
+    element: <ForgotPassword />,
+    errorElement: <ErrorPage />,
   },
   {
     path: "/product/:productId",
     element: <ProductDetailsPage />,
+    errorElement: <ErrorPage />,
   },
   {
     path: "/cart",
     element: <CartPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/user/dashboard",
+    element: <UserDashboard />,
+    errorElement: <ErrorPage />,
   },
   {
     path: "/addresses",
     element: <AddressesPage />,
+    errorElement: <ErrorPage />,
   },
   {
     path: "/orders",
     element: <OrdersPage />,
+    errorElement: <ErrorPage />,
   },
-  {
-    path: "/forgot-password",
-    element: <ForgotPassword />,
-  },
-
   {
     path: "/contact",
     element: <UserContacts />,
+    errorElement: <ErrorPage />,
   },
-
-   {
+  {
+    path: "/settings",
+    element: <UserSetting />,
+    errorElement: <ErrorPage />,
+  },
+  {
     path: "/blog",
     element: <Blog />,
-   }
-    ,
- 
-
-  // ✅ ADMIN ROUTES
+    errorElement: <ErrorPage />,
+  },
+  // Admin Routes
   {
     path: "/admin/dashboard",
-    element: <AdminLayout />, // Admin layout with sidebar
+    element: <AdminLayout />,
+    errorElement: <ErrorPage />,
   },
-
   {
     path: "/admin/products",
-    element: <AdminProduct />, // Admin product management page
+    element: <AdminProduct />,
+    errorElement: <ErrorPage />,
   },
-
   {
     path: "/admin/categories",
-    element: <AdminManageCategories />, // Admin category management page
+    element: <AdminManageCategories />,
+    errorElement: <ErrorPage />,
   },
   {
     path: "/admin/deals",
-    element: <AdminManageDeals />, // Admin deal management page
+    element: <AdminManageDeals />,
+    errorElement: <ErrorPage />,
   },
   {
     path: "/admin/banners",
-    element: <AdminManagebanner />, // Admin banner management page
+    element: <AdminManagebanner />,
+    errorElement: <ErrorPage />,
   },
   {
     path: "/admin/orders",
-    element: <AdminManageOrders />, // Admin orders management page
-  },
-
-  {
-    path:"/admin/messages",
-    element: <AdminManageContacts />, // Admin contact management page
+    element: <AdminManageOrders />,
+    errorElement: <ErrorPage />,
   },
   {
-    path:"/settings",
-    element: <UserSetting />, // User setting page
- }
-
+    path: "/admin/messages",
+    element: <AdminManageContacts />,
+    errorElement: <ErrorPage />,
+  },
 ]);
 
 const App: React.FC = () => {

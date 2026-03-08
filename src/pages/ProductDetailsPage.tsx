@@ -224,7 +224,7 @@ export default function ProductDetailsPage() {
         keywords={p ? `${p.name}, cement, construction materials` : "cement, construction materials"}
         ogTitle={p ? `${p.name} - Simba Cement` : "Product Details"}
         ogDescription={p ? p.description || `Buy ${p.name}` : "View product details"}
-        ogImage={activeImage || p?.image_url}
+        ogImage={activeImage || p?.image_url || undefined}
         canonicalUrl={`https://simba-cement.com/product/${id}`}
       />
       

@@ -52,11 +52,11 @@ const SEOHelmet: React.FC<SEOHelmetProps> = ({
     updateMetaTag('keywords', keywords);
     updateMetaTag('og:title', ogTitle || title, true);
     updateMetaTag('og:description', ogDescription || description, true);
-    if (ogImage) updateMetaTag(\'og:image\', ogImage, true);
-    updateMetaTag(\'og:url\', ogUrl, true);
-    updateMetaTag(\'twitter:card\', twitterCard);
-    updateMetaTag(\'twitter:title\', twitterTitle || title);
-    updateMetaTag(\'twitter:description\', twitterDescription || description);
+    if (ogImage) updateMetaTag('og:image', ogImage, true);
+    updateMetaTag('og:url', ogUrl, true);
+    updateMetaTag('twitter:card', twitterCard);
+    updateMetaTag('twitter:title', twitterTitle || title);
+    updateMetaTag('twitter:description', twitterDescription || description);
 
     // Update canonical URL
     if (canonicalUrl) {

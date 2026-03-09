@@ -10,6 +10,7 @@ import {
   Hammer,
   Ruler,
 } from "lucide-react";
+import SEOHelmet from "../utils/SEOHelmet";
 
 type BlogPost = {
   id: string;
@@ -140,6 +141,15 @@ export default function Blog() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
+      <SEOHelmet
+        title="Simba Hardware Blog - Cement, Steel & Site Tips"
+        description="Straightforward guides for building right. Learn about cement types, steel grades, and construction estimations."
+        keywords="cement blog, construction tips, steel grades, building guides"
+        ogTitle="Simba Hardware Blog"
+        ogDescription="Expert construction tips and building material guides."
+        ogUrl="https://www.simbacementwholesalesdistributor.co.ke/blog"
+        canonicalUrl="https://www.simbacementwholesalesdistributor.co.ke/blog"
+      />
       <div className="pointer-events-none fixed inset-x-0 top-0 -z-10 h-56 bg-gradient-to-b from-fuchsia-100/50 via-pink-100/30 to-transparent" />
 
       <div className="mx-auto w-full max-w-6xl px-4 py-10">

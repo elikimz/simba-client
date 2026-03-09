@@ -21,8 +21,8 @@ const HomePage = () => {
         keywords="cement, construction materials, building supplies, quality cement, premium cement"
         ogTitle="Simba Cement - Premium Quality Cement"
         ogDescription="Discover high-quality cement and construction materials from Simba Cement. Perfect for your building projects."
-        ogUrl="https://simba-cement.com"
-        canonicalUrl="https://simba-cement.com"
+        ogUrl="https://www.simbacementwholesalesdistributor.co.ke"
+        canonicalUrl="https://www.simbacementwholesalesdistributor.co.ke"
       />
       <Navbar />
       <Hero />

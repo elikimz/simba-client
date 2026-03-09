@@ -58,7 +58,7 @@ const ProductsShowcase = () => {
     else if (sort === "price_asc") copy.sort((a: any, b: any) => sortPriceValue(a) - sortPriceValue(b));
     else if (sort === "price_desc") copy.sort((a: any, b: any) => sortPriceValue(b) - sortPriceValue(a));
     return copy;
-  }, [allProducts.length, allProducts[0]?.id, sort]);
+  }, [allProducts, sort]);
 
   // ✅ IMPORTANT: pass raw price + max_price through to ProductCard
   const products = React.useMemo(() => {
@@ -72,7 +72,7 @@ const ProductsShowcase = () => {
       categoryName: p.category?.name ?? undefined,
       availableInText: p.available_in_text ?? undefined,
     }));
-  }, [sorted.length, sorted[0]?.id]);
+  }, [sorted]);
 
   if (products.length === 0) return null;
   

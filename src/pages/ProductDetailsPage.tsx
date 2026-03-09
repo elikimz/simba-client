@@ -88,7 +88,7 @@ export default function ProductDetailsPage() {
   const [toastTitle, setToastTitle] = useState("Added to Cart");
 
   // ✅ gallery state
-  const images = useMemo(() => buildGallery(p), [p]);
+  const images = useMemo(() => buildGallery(p), [p?.id, p?.images, p?.image_url]);
   const [activeImage, setActiveImage] = useState<string | null>(null);
 
   // ✅ zoom + pan state
@@ -101,7 +101,7 @@ export default function ProductDetailsPage() {
     setActiveImage(images[0] ?? null);
     setZoom(1);
     setOffset({ x: 0, y: 0 });
-  }, [p?.id, images]);
+  }, [p?.id, images.length, images[0]]);
 
   // auto-close toast after 3 seconds
   useEffect(() => {

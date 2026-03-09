@@ -47,19 +47,18 @@ const ProductsShowcase = () => {
   }
 
   // Categories are now handled server-side; we just display what we got
-  const categories = [{ id: "all", name: "All Categories" }];
-  const filtered = allProducts;
+  const categories = React.useMemo(() => [{ id: "all", name: "All Categories" }], []);
 
   // ✅ sort (client-side only, since backend returns sorted by created_at desc)
   const sorted = React.useMemo(() => {
-    if (sort === "latest") return [...filtered];
-    const copy = [...filtered];
+    if (sort === "latest") return [...allProducts];
+    const copy = [...allProducts];
     if (sort === "name_asc") copy.sort((a: any, b: any) => a.name.localeCompare(b.name));
     else if (sort === "name_desc") copy.sort((a: any, b: any) => b.name.localeCompare(a.name));
     else if (sort === "price_asc") copy.sort((a: any, b: any) => sortPriceValue(a) - sortPriceValue(b));
     else if (sort === "price_desc") copy.sort((a: any, b: any) => sortPriceValue(b) - sortPriceValue(a));
     return copy;
-  }, [filtered, sort]);
+  }, [allProducts, sort]);
 
   // ✅ IMPORTANT: pass raw price + max_price through to ProductCard
   const products = React.useMemo(() => {

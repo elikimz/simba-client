@@ -22,7 +22,7 @@ export interface ProductCreateInput {
   discount_percentage?: number | null; // default 0.0 on backend
   stock: number;
   image_url?: string | null;
-  images?: string[] | null; // for multiple images, if supported by backend
+  images?: (string | { url: string; is_primary?: boolean; sort_order?: number })[] | null;
   category_id?: number | null;
   max_price?: number | null
 }
@@ -35,7 +35,7 @@ export interface ProductUpdateInput {
   discount_percentage?: number | null;
   stock?: number | null;
   image_url?: string | null;
-  images?: string[] | null; // for multiple images, if supported by backend
+  images?: (string | { url: string; is_primary?: boolean; sort_order?: number })[] | null;
   category_id?: number | null;
   max_price?: number | null
 }
@@ -49,6 +49,7 @@ export interface ProductResponse {
   discount_percentage: number;
   stock: number;
   image_url?: string | null;
+  images?: (string | { url: string; is_primary?: boolean; sort_order?: number })[] | null;
 
   seller: SellerNestedSchema;
   category?: CategoryNestedSchema | null;

@@ -288,7 +288,7 @@ const Hero = () => {
     []
   );
 
-  const finalSlides = slides.length ? slides : fallbackSlides;
+  const finalSlides = useMemo(() => (slides.length ? slides : fallbackSlides), [slides, fallbackSlides]);
 
   const [active, setActive] = useState(0);
   const [isPaused, setIsPaused] = useState(false);

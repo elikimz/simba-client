@@ -60,19 +60,21 @@ const DealsSection = () => {
 
   const countdownLabel = endsAt ? formatCountdown(endsAt - now) : "00 : 00 : 00 : 00";
 
-  const products = data.products.map((p) => ({
-    id: p.id,
-    image: p.image_url || fallbackImage,
-    name: p.name,
-    price: kes(
-      finalPrice({
-        price: p.price,
-        deal_price: p.deal_price,
-        discount_percentage: p.discount_percentage,
-      })
-    ),
-    inStock: (p.stock ?? 0) > 0,
-  }));
+  const products = React.useMemo(() => {
+    return data.products.map((p) => ({
+      id: p.id,
+      image: p.image_url || fallbackImage,
+      name: p.name,
+      price: kes(
+        finalPrice({
+          price: p.price,
+          deal_price: p.deal_price,
+          discount_percentage: p.discount_percentage,
+        })
+      ),
+      inStock: (p.stock ?? 0) > 0,
+    }));
+  }, [data.products]);
 
   return (
     <section className="bg-white py-16">

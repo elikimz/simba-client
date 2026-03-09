@@ -19,6 +19,9 @@ const ErrorPage: React.FC = () => {
     message = error.message || message;
   }
 
+  // ✅ Debug info for production (hidden but available in DOM if needed)
+  const errorStack = error instanceof Error ? error.stack : JSON.stringify(error);
+
   const reload = () => window.location.reload();
 
   return (
@@ -58,6 +61,16 @@ const ErrorPage: React.FC = () => {
                 <p className="mt-6 text-xs text-slate-400">
                   If this keeps happening, try again in a moment. 🙂 
                 </p>
+
+                {/* ✅ Debugging aid: hidden stack trace */}
+                <details className="mt-8 cursor-pointer opacity-20 hover:opacity-100 transition-opacity">
+                  <summary className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">
+                    Technical Details
+                  </summary>
+                  <pre className="mt-4 overflow-auto rounded-lg bg-slate-50 p-4 text-[10px] leading-relaxed text-slate-600">
+                    {errorStack}
+                  </pre>
+                </details>
               </div>
             </div>
           </div>

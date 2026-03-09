@@ -273,7 +273,7 @@ const Hero = () => {
     }
 
     return out;
-  }, [banners]);
+  }, [banners?.length, banners?.[0]?.id]);
 
   const fallbackSlides: Slide[] = useMemo(
     () => [

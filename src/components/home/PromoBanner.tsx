@@ -56,7 +56,7 @@ const PromoBanner = () => {
         window.clearInterval(intervalRef.current);
       }
     };
-  }, [images]);
+  }, [images.length, images[0]]);
 
   // Requirement: show nothing if backend not available
   if (isLoading || isError || !images.length) return null;

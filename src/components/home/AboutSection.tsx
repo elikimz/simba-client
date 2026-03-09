@@ -94,7 +94,7 @@ const AboutSection = () => {
       return;
     }
     setCurrentImg((prev) => pickDifferentRandom(images, prev));
-  }, [images]);
+  }, [images.length, images[0]]);
 
   // switch randomly every 10s
   useEffect(() => {
@@ -113,7 +113,7 @@ const AboutSection = () => {
         intervalRef.current = null;
       }
     };
-  }, [images, isLoading, isError]);
+  }, [images.length, images[0], isLoading, isError]);
 
   // show nothing if backend not available / no images
   if (isLoading || isError || !currentImg) return null;

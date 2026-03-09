@@ -37,7 +37,7 @@
 //     };
 //   }, []);
 
-//   const totals = useMemo(() => cartTotals(cart), [cart]);
+//   const totals = useMemo(() => cartTotals(cart), [cart.items.length]);
 
 //   // ✅ Vite-safe public asset URL (works on Vercel + sub-paths)
 //   const fallbackLogo = `${import.meta.env.BASE_URL}logo.png`;
@@ -179,7 +179,7 @@ const MainHeader = ({ logoSrc }: Props) => {
     };
   }, []);
 
-  const totals = useMemo(() => cartTotals(cart), [cart]);
+  const totals = useMemo(() => cartTotals(cart), [cart.items.length]);
 
   // ✅ Vercel-safe: use absolute public path (you confirmed /logo.png is 200 OK)
   const fallbackLogo = "/logo.png";

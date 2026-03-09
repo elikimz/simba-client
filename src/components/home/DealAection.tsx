@@ -74,7 +74,7 @@ const DealsSection = () => {
       ),
       inStock: (p.stock ?? 0) > 0,
     }));
-  }, [data.products]);
+  }, [data.products.length, data.products[0]?.id]);
 
   return (
     <section className="bg-white py-16">

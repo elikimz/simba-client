@@ -125,7 +125,7 @@ const WhyMaisha = () => {
       // ctaText: b.cta_text ?? "Shop Now",
       // ctaHref: b.cta_href ?? "/products",
     };
-  }, [banners]);
+  }, [banners?.length, banners?.[0]?.id]);
 
   // ✅ Requirement: when backend not available show nothing
   if (isLoading || isError || !hero) return null;

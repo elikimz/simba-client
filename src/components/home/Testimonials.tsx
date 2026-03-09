@@ -46,7 +46,7 @@ const Stars = () => (
 );
 
 const TestimonialsSection = () => {
-  const items = React.useMemo(() => [...testimonials, ...testimonials], []);
+  const items = React.useMemo(() => [...testimonials, ...testimonials], [testimonials.length]);
 
   return (
     <section className="bg-gray-100 py-14">

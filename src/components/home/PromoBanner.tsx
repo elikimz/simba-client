@@ -28,7 +28,7 @@ const PromoBanner = () => {
 
   const images = useMemo(
     () => collectAllImages(banners as any[] | undefined),
-    [banners]
+    [banners?.length, banners?.[0]?.id]
   );
 
   const [index, setIndex] = useState(0);
@@ -56,7 +56,7 @@ const PromoBanner = () => {
         window.clearInterval(intervalRef.current);
       }
     };
-  }, [images.length, images[0]]);
+  }, [images.length]);
 
   // Requirement: show nothing if backend not available
   if (isLoading || isError || !images.length) return null;

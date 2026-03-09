@@ -81,7 +81,7 @@ const AboutSection = () => {
 
   const images = useMemo(
     () => collectAllImages(banners as any[] | undefined),
-    [banners]
+    [banners?.length, banners?.[0]?.id]
   );
 
   const [currentImg, setCurrentImg] = useState<string | null>(null);
@@ -94,7 +94,7 @@ const AboutSection = () => {
       return;
     }
     setCurrentImg((prev) => pickDifferentRandom(images, prev));
-  }, [images.length, images[0]]);
+  }, [images.length]);
 
   // switch randomly every 10s
   useEffect(() => {
@@ -113,7 +113,7 @@ const AboutSection = () => {
         intervalRef.current = null;
       }
     };
-  }, [images.length, images[0], isLoading, isError]);
+  }, [images.length, isLoading, isError]);
 
   // show nothing if backend not available / no images
   if (isLoading || isError || !currentImg) return null;

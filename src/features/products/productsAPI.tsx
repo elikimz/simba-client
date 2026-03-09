@@ -71,11 +71,17 @@ export const productsAPI = createApi({
   }),
   tagTypes: ["Products", "Product"],
   endpoints: (builder) => ({
-    /** GET /products/ */
-    listProducts: builder.query<ProductResponse[], void>({
-      query: () => ({
+    /** GET /products/ with pagination and filtering */
+    listProducts: builder.query<ProductResponse[], { skip?: number; limit?: number; category_id?: number; search?: string } | void>({
+      query: (args) => ({
         url: "/products/",
         method: "GET",
+        params: {
+          skip: args?.skip ?? 0,
+          limit: args?.limit ?? 20,
+          ...(args?.category_id && { category_id: args.category_id }),
+          ...(args?.search && { search: args.search }),
+        },
       }),
       providesTags: (result) =>
         result
@@ -148,3 +154,13 @@ export const {
   useUpdateProductMutation,
   useDeleteProductMutation,
 } = productsAPI;
+
+// Helper to call with pagination
+export function useListProductsWithPaginationQuery(
+  skip: number = 0,
+  limit: number = 20,
+  category_id?: number,
+  search?: string
+) {
+  return useListProductsQuery({ skip, limit, category_id, search });
+}

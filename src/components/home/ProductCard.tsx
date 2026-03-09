@@ -479,7 +479,8 @@ export default function ProductCard({
             <img
               src={image}
               alt={name}
-              loading="lazy"
+              loading={id <= 5 ? "eager" : "lazy"}
+              fetchPriority={id <= 5 ? "high" : "auto"}
               className="
                 h-full w-full
                 object-contain

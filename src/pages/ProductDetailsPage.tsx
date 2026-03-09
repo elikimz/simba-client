@@ -227,6 +227,35 @@ export default function ProductDetailsPage() {
         ogImage={activeImage || p?.image_url || undefined}
         canonicalUrl={`https://simba-cement.com/product/${id}`}
       />
+
+      {/* Product Schema Markup */}
+      {p && (
+        <script type="application/ld+json">
+          {`
+            {
+              "@context": "https://schema.org",
+              "@type": "Product",
+              "name": "${p.name}",
+              "image": "${activeImage || p.image_url || ''}",
+              "description": "${p.description || ''}",
+              "sku": "${p.id}",
+              "mpn": "${p.id}",
+              "brand": {
+                "@type": "Brand",
+                "name": "Simba Cement"
+              },
+              "offers": {
+                "@type": "Offer",
+                "url": "https://simba-cement.com/product/${p.id}",
+                "priceCurrency": "KES",
+                "price": "${realPrice}",
+                "itemCondition": "https://schema.org/NewCondition",
+                "availability": "https://schema.org/${inStock ? 'InStock' : 'OutOfStock'}"
+              }
+            }
+          `}
+        </script>
+      )}
       
       {/* ✅ Navbar switches based on login */}
       {loggedIn ? (
@@ -316,7 +345,10 @@ export default function ProductDetailsPage() {
                     <img
                       src={activeImage || ""}
                       alt={p.name}
-                      className="h-full w-full object-contain"
+                      className="h-full w-full object-contain p-4"
+                      draggable={false}
+                      loading="eager"
+                      fetchPriority="high"
                     />
                   ) : (
                     <div className="flex h-full items-center justify-center text-gray-400">
@@ -324,117 +356,133 @@ export default function ProductDetailsPage() {
                     </div>
                   )}
                 </div>
+
+                {/* Badges */}
+                <div className="absolute left-4 top-4 flex flex-col gap-2">
+                  {hasDiscount && (
+                    <span className="rounded-full bg-rose-600 px-3 py-1 text-xs font-extrabold text-white">
+                      -{discountPercent}% OFF
+                    </span>
+                  )}
+                  {p.category?.name && (
+                    <span className="rounded-full bg-gray-900/10 px-3 py-1 text-xs font-bold text-gray-900 backdrop-blur-sm">
+                      {p.category.name}
+                    </span>
+                  )}
+                </div>
+
+                {/* Zoom help */}
+                <div className="absolute bottom-4 right-4 rounded-full bg-white/80 px-3 py-1 text-[10px] font-bold text-gray-600 backdrop-blur-sm">
+                  Scroll to zoom • Drag to pan
+                </div>
               </div>
 
-              {/* Thumbnail gallery */}
+              {/* Thumbnails */}
               {images.length > 1 && (
-                <div className="mt-4 flex gap-2 overflow-x-auto">
-                  {images.map((img, idx) => (
+                <div className="mt-4 flex flex-wrap gap-3">
+                  {images.map((img) => (
                     <button
-                      key={idx}
+                      key={img}
+                      type="button"
                       onClick={() => selectImage(img)}
-                      className={`h-20 w-20 flex-shrink-0 rounded-lg border-2 overflow-hidden ${
-                        activeImage === img ? "border-blue-500" : "border-gray-300"
-                      }`}
+                      className={[
+                        "h-20 w-20 overflow-hidden rounded-xl border-2 transition-all",
+                        activeImage === img ? "border-indigo-600" : "border-transparent bg-gray-50",
+                      ].join(" ")}
                     >
-                      <img src={img} alt={`${p.name} ${idx + 1}`} className="h-full w-full object-cover" />
+                      <img src={img} alt="Thumbnail" className="h-full w-full object-cover" />
                     </button>
                   ))}
                 </div>
               )}
             </div>
 
-            {/* Right: details */}
-            <div className="space-y-6">
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900">{p.name}</h1>
-                {p.category && (
-                  <p className="mt-2 text-sm text-gray-600">Category: {p.category.name}</p>
-                )}
-              </div>
+            {/* Right: info */}
+            <div className="flex flex-col">
+              <div className="rounded-3xl bg-white p-6 shadow-sm sm:p-8">
+                <h1 className="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-3xl">
+                  {p.name}
+                </h1>
 
-              {/* Price section */}
-              <div className="space-y-2">
-                <div className="flex items-baseline gap-3">
-                  <span className="text-3xl font-bold text-blue-600">{kes(realPrice)}</span>
+                <div className="mt-4 flex items-baseline gap-4">
+                  <span className="text-3xl font-black text-indigo-900">{kes(realPrice)}</span>
                   {hasDiscount && (
-                    <>
-                      <span className="text-lg text-gray-500 line-through">{kes(realOriginalPrice)}</span>
-                      <span className="rounded-lg bg-red-100 px-3 py-1 text-sm font-bold text-red-700">
-                        -{discountPercent}%
-                      </span>
-                    </>
+                    <span className="text-lg font-bold text-gray-400 line-through">
+                      {kes(realOriginalPrice)}
+                    </span>
                   )}
                 </div>
-              </div>
 
-              {/* Stock status */}
-              <div>
-                <p className={`text-sm font-semibold ${inStock ? "text-green-600" : "text-red-600"}`}>
-                  {inStock ? `✓ In Stock (${p.stock} available)` : "Out of Stock"}
-                </p>
-              </div>
-
-              {/* Description */}
-              {p.description && (
-                <div>
-                  <h2 className="text-lg font-semibold text-gray-900">Description</h2>
-                  <p className="mt-2 text-gray-700">{p.description}</p>
+                <div className="mt-6">
+                  <h3 className="text-sm font-bold text-gray-900">Description</h3>
+                  <div className="mt-3 space-y-4 text-base leading-relaxed text-gray-700">
+                    {p.description || "No description provided for this product."}
+                  </div>
                 </div>
-              )}
 
-              {/* Quantity selector */}
-              <div className="flex items-center gap-4">
-                <label className="text-sm font-semibold text-gray-700">Quantity:</label>
-                <div className="flex items-center border border-gray-300 rounded-lg">
-                  <button
-                    onClick={() => setQty(Math.max(1, qty - 1))}
-                    className="px-3 py-2 text-gray-600 hover:bg-gray-100"
-                  >
-                    −
-                  </button>
-                  <input
-                    type="number"
-                    value={qty}
-                    onChange={(e) => setQty(Math.max(1, Number(e.target.value)))}
-                    className="w-16 border-0 text-center"
-                    min="1"
-                  />
-                  <button
-                    onClick={() => setQty(qty + 1)}
-                    className="px-3 py-2 text-gray-600 hover:bg-gray-100"
-                  >
-                    +
-                  </button>
+                <div className="mt-8 border-t border-gray-100 pt-8">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-bold text-gray-900">Quantity</h3>
+                    <div className="flex items-center rounded-2xl border border-gray-200 p-1">
+                      <button
+                        type="button"
+                        onClick={() => setQty(Math.max(1, qty - 1))}
+                        className="flex h-10 w-10 items-center justify-center rounded-xl text-xl font-bold hover:bg-gray-50"
+                      >
+                        −
+                      </button>
+                      <span className="w-12 text-center font-black">{qty}</span>
+                      <button
+                        type="button"
+                        onClick={() => setQty(qty + 1)}
+                        className="flex h-10 w-10 items-center justify-center rounded-xl text-xl font-bold hover:bg-gray-50"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="mt-8 grid gap-4 sm:grid-cols-2">
+                    <button
+                      type="button"
+                      disabled={!inStock || addingApi}
+                      onClick={handleAddToCart}
+                      className="flex w-full items-center justify-center rounded-2xl bg-gray-900 px-6 py-4 text-sm font-black text-white transition-all hover:bg-black disabled:opacity-50"
+                    >
+                      {addingApi ? "Adding..." : "Add to Cart"}
+                    </button>
+
+                    <a
+                      href={waLink}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex w-full items-center justify-center rounded-2xl bg-emerald-600 px-6 py-4 text-sm font-black text-white transition-all hover:bg-emerald-700"
+                    >
+                      Order via WhatsApp
+                    </a>
+                  </div>
+
+                  <div className="mt-4">
+                    <a
+                      href={`tel:${CALL_NUMBER}`}
+                      className="flex w-full items-center justify-center rounded-2xl border-2 border-gray-900 px-6 py-4 text-sm font-black text-gray-900 transition-all hover:bg-gray-50"
+                    >
+                      Call to Inquire
+                    </a>
+                  </div>
+
+                  <p className="mt-6 text-center text-xs font-bold text-gray-500">
+                    {inStock ? "✅ In Stock & Ready for Delivery" : "❌ Out of Stock"}
+                  </p>
                 </div>
               </div>
 
-              {/* Action buttons */}
-              <div className="flex gap-4">
-                <button
-                  onClick={handleAddToCart}
-                  disabled={!inStock || addingApi}
-                  className="flex-1 rounded-lg bg-blue-600 px-6 py-3 font-bold text-white hover:bg-blue-700 disabled:bg-gray-400"
-                >
-                  {addingApi ? "Adding..." : "Add to Cart"}
-                </button>
-                <a
-                  href={waLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-lg bg-green-600 px-6 py-3 font-bold text-white hover:bg-green-700"
-                >
-                  WhatsApp
-                </a>
-              </div>
-
-              {/* Contact info */}
-              <div className="rounded-lg bg-gray-50 p-4">
-                <p className="text-sm text-gray-700">
-                  Have questions? Call us at{" "}
-                  <a href={`tel:${CALL_NUMBER}`} className="font-bold text-blue-600 hover:underline">
-                    {CALL_NUMBER}
-                  </a>
+              {/* Delivery Info */}
+              <div className="mt-6 rounded-3xl bg-indigo-50 p-6">
+                <h4 className="text-sm font-black text-indigo-900">Delivery Information</h4>
+                <p className="mt-2 text-sm font-medium leading-relaxed text-indigo-800/80">
+                  We offer fast delivery for all building materials within Kenya. Bulk orders may
+                  qualify for discounted shipping rates. Contact us for a custom quote.
                 </p>
               </div>
             </div>

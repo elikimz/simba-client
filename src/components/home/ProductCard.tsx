@@ -274,7 +274,7 @@
 
 
 // src/components/ProductCard.tsx
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "../../assets/store";
@@ -394,14 +394,7 @@ export default function ProductCard({
     [price, max_price]
   );
 
-  // ✅ DEBUG LOGS (remove after you find the issue)
-  useEffect(() => {
-    console.groupCollapsed(`[ProductCard] #${id} ${name}`);
-    console.log("price prop:", price, "type:", typeof price);
-    console.log("max_price prop:", max_price, "type:", typeof max_price);
-    console.log("computed displayPrice:", displayPrice);
-    console.groupEnd();
-  }, [id, name, price, max_price, displayPrice]);
+  // ✅ Debug logs removed for production
 
   const waText = encodeURIComponent(`Hi, I want to order: ${name}`);
   const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${waText}`;

@@ -23,27 +23,13 @@ createRoot(rootElement).render(
   </StrictMode>
 );
 
-// **Register Service Worker with aggressive updates**
+// ✅ Register Service Worker
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker
       .register("/service-worker.js")
-      .then((registration) => {
+      .then(() => {
         console.log("✅ Service Worker registered");
-
-        // **Force update check on load**
-        registration.onupdatefound = () => {
-          const newWorker = registration.installing;
-          newWorker?.addEventListener("statechange", () => {
-            if (
-              newWorker.state === "installed" &&
-              navigator.serviceWorker.controller
-            ) {
-              newWorker.postMessage({ type: "SKIP_WAITING" });
-              window.location.reload(); // Ensure fresh state
-            }
-          });
-        };
       })
       .catch((err) => console.error("❌ Service Worker failed:", err));
   });

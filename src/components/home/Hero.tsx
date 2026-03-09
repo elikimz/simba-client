@@ -1,7 +1,7 @@
 
 
 // // src/components/Hero.tsx
-// import { useEffect, useMemo, useRef, useState } from "react";
+// import { useEffect, useMemo, useState } from "react";
 // import { useListActiveBannersQuery } from "../../features/banner/bannerAPI";
 
 // const AUTOPLAY_MS = 5000;
@@ -220,7 +220,7 @@
 
 
 // src/components/Hero.tsx
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useListActiveBannersQuery } from "../../features/banner/bannerAPI";
 
 const AUTOPLAY_MS = 5000;
@@ -293,11 +293,9 @@ const Hero = () => {
   const [active, setActive] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
-  const restartTickRef = useRef(0);
   const [restartKey, setRestartKey] = useState(0);
 
   const bumpRestart = () => {
-    restartTickRef.current += 1;
     setRestartKey((k) => k + 1);
   };
 
@@ -309,18 +307,16 @@ const Hero = () => {
 
   useEffect(() => {
     if (active >= finalSlides.length) setActive(0);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [finalSlides.length]);
+  }, [finalSlides.length, active]);
 
   useEffect(() => {
-    if (isPaused) return;
-    if (finalSlides.length <= 1) return;
+    if (isPaused || finalSlides.length <= 1) return;
 
-    const id = window.setInterval(() => {
+    const intervalId = window.setInterval(() => {
       setActive((p) => (p + 1) % finalSlides.length);
     }, AUTOPLAY_MS);
 
-    return () => window.clearInterval(id);
+    return () => window.clearInterval(intervalId);
   }, [isPaused, finalSlides.length, restartKey]);
 
   const nextImage =

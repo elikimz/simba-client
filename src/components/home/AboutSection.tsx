@@ -46,7 +46,7 @@
 
 
 // src/components/AboutSection.tsx
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useListActiveBannersQuery } from "../../features/banner/bannerAPI"; // ✅ adjust path
 
 const SWITCH_MS = 10000; // change every 10s
@@ -85,7 +85,6 @@ const AboutSection = () => {
   );
 
   const [currentImg, setCurrentImg] = useState<string | null>(null);
-  const intervalRef = useRef<number | null>(null);
 
   // pick first image when list arrives
   useEffect(() => {
@@ -98,21 +97,13 @@ const AboutSection = () => {
 
   // switch randomly every 10s
   useEffect(() => {
-    if (isLoading || isError) return;
-    if (images.length <= 1) return;
+    if (isLoading || isError || images.length <= 1) return;
 
-    if (intervalRef.current) window.clearInterval(intervalRef.current);
-
-    intervalRef.current = window.setInterval(() => {
+    const intervalId = window.setInterval(() => {
       setCurrentImg((prev) => pickDifferentRandom(images, prev));
     }, SWITCH_MS);
 
-    return () => {
-      if (intervalRef.current) {
-        window.clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-    };
+    return () => window.clearInterval(intervalId);
   }, [images.length, isLoading, isError]);
 
   // show nothing if backend not available / no images

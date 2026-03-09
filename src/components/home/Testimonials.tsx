@@ -1,5 +1,5 @@
 // src/components/TestimonialsSection.tsx
-import React from "react";
+// import React from "react";
 type Testimonial = {
   name: string;
   location: string;
@@ -46,7 +46,7 @@ const Stars = () => (
 );
 
 const TestimonialsSection = () => {
-  const items = React.useMemo(() => [...testimonials, ...testimonials], [testimonials.length]);
+  const items = [...testimonials, ...testimonials];
 
   return (
     <section className="bg-gray-100 py-14">

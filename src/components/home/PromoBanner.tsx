@@ -1,5 +1,5 @@
 // src/components/PromoBanner.tsx
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useListActiveBannersQuery } from "../../features/banner/bannerAPI";
 
@@ -32,7 +32,6 @@ const PromoBanner = () => {
   );
 
   const [index, setIndex] = useState(0);
-  const intervalRef = useRef<number | null>(null);
 
   // Reset index when images change
   useEffect(() => {
@@ -43,19 +42,11 @@ const PromoBanner = () => {
   useEffect(() => {
     if (images.length <= 1) return;
 
-    if (intervalRef.current) {
-      window.clearInterval(intervalRef.current);
-    }
-
-    intervalRef.current = window.setInterval(() => {
+    const intervalId = window.setInterval(() => {
       setIndex((prev) => (prev + 1) % images.length);
     }, CHANGE_INTERVAL);
 
-    return () => {
-      if (intervalRef.current) {
-        window.clearInterval(intervalRef.current);
-      }
-    };
+    return () => window.clearInterval(intervalId);
   }, [images.length]);
 
   // Requirement: show nothing if backend not available

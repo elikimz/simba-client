@@ -51,7 +51,7 @@ const ProductsShowcase = () => {
 
   // ✅ sort (client-side only, since backend returns sorted by created_at desc)
   const sorted = React.useMemo(() => {
-    if (sort === "latest") return [...allProducts];
+    if (sort === "latest") return allProducts;
     const copy = [...allProducts];
     if (sort === "name_asc") copy.sort((a: any, b: any) => a.name.localeCompare(b.name));
     else if (sort === "name_desc") copy.sort((a: any, b: any) => b.name.localeCompare(a.name));

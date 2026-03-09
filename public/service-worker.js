@@ -37,7 +37,8 @@ self.addEventListener('activate', (event) => {
 
 // Fetch event
 self.addEventListener('fetch', (event) => {
-  if (event.request.method !== 'GET') {
+  // Only handle GET requests and http/https schemes
+  if (event.request.method !== 'GET' || !event.request.url.startsWith('http')) {
     return;
   }
 

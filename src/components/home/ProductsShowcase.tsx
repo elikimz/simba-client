@@ -26,6 +26,7 @@ function sortPriceValue(p: any): number {
 }
 
 const ProductsShowcase = () => {
+  // ✅ ALL HOOKS MUST BE CALLED UNCONDITIONALLY AT THE TOP
   const [selectedCategory, setSelectedCategory] = React.useState<string>("all");
   const [sort, setSort] = React.useState<
     "latest" | "name_asc" | "name_desc" | "price_asc" | "price_desc"
@@ -42,11 +43,8 @@ const ProductsShowcase = () => {
   });
 
   const allProducts = data ?? [];
-  if (isLoading || isError || allProducts.length === 0) {
-    return null;
-  }
 
-  // Categories are now handled server-side; we just display what we got
+  // ✅ Categories are now handled server-side; we just display what we got
   const categories = React.useMemo(() => [{ id: "all", name: "All Categories" }], []);
 
   // ✅ sort (client-side only, since backend returns sorted by created_at desc)
@@ -73,6 +71,11 @@ const ProductsShowcase = () => {
       availableInText: p.available_in_text ?? undefined,
     }));
   }, [sorted]);
+
+  // ✅ NOW we can do early returns after all hooks are called
+  if (isLoading || isError || allProducts.length === 0) {
+    return null;
+  }
 
   if (products.length === 0) return null;
   

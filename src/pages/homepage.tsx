@@ -1,6 +1,7 @@
 import Navbar from "../components/navbar/NavBar";
-import Hero from "../components/home/Hero";
+import HeroImproved from "../components/home/HeroImproved";
 import FeatureStrip from "../components/home/FeatureStrip";
+import FeaturedCategories from "../components/home/FeaturedCategories";
 import AboutSection from "../components/home/AboutSection";
 import DealsSection from "../components/home/DealAection";
 import ProductsShowcase from "../components/home/ProductsShowcase";
@@ -25,8 +26,9 @@ const HomePage = () => {
         canonicalUrl="https://www.simbacementwholesalesdistributor.co.ke"
       />
       <Navbar />
-      <Hero />
+      <HeroImproved />
       <FeatureStrip />
+      <FeaturedCategories />
       <AboutSection />
       <DealsSection />
       <ProductsShowcase />

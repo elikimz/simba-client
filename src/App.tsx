@@ -6,6 +6,9 @@ import HomePage from "../src/pages/homepage";
 import ErrorPage from "./components/layout/ErrorPage";
 import UserDashboard from "./pages/UserDashboard";
 import ProductDetailsPage from "./pages/ProductDetailsPage";
+import ProductsPage from "./pages/ProductsPage";
+import CategoryPage from "./pages/CategoryPage";
+import AboutPage from "./pages/AboutPage";
 import CartPage from "./pages/CartPage";
 import Blog from "./pages/blog";
 import AdminLayout from "./pages/admimlayout";
@@ -51,6 +54,21 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
+    path: "/shop",
+    element: <ProductsPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/products",
+    element: <ProductsPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/category/:categoryId",
+    element: <CategoryPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
     path: "/product/:productId",
     element: <ProductDetailsPage />,
     errorElement: <ErrorPage />,
@@ -78,6 +96,11 @@ const router = createBrowserRouter([
   {
     path: "/contact",
     element: <UserContacts />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/about",
+    element: <AboutPage />,
     errorElement: <ErrorPage />,
   },
   {

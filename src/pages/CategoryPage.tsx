@@ -48,6 +48,7 @@ export default function CategoryPage() {
   const [page, setPage] = useState(0);
   const pageSize = 20;
 
+  // Always call the hook at the top level
   const { data, isLoading, isError } = useListProductsQuery({
     skip: page * pageSize,
     limit: pageSize,
@@ -146,11 +147,13 @@ export default function CategoryPage() {
         </div>
 
         {/* Products Grid */}
-        {isLoading || isError || products.length === 0 ? (
+        {isLoading ? (
           <div className="text-center py-12">
-            <p className="text-gray-600 text-lg">
-              {isLoading ? "Loading products..." : "No products found in this category."}
-            </p>
+            <p className="text-gray-600 text-lg">Loading products...</p>
+          </div>
+        ) : isError || products.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-gray-600 text-lg">No products found in this category.</p>
           </div>
         ) : (
           <>

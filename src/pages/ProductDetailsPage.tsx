@@ -8,6 +8,9 @@ import SEOHelmet from "../utils/SEOHelmet";
 import MainHeader from "../components/navbar/MainHeader";
 // ✅ logged-in navbar
 import UserNavBar from "../components/navbar/userNavbar";
+// ✅ footer with social media links
+import FooterTop from "../components/footer/FooterTop";
+import FooterBottom from "../components/footer/FooterBottom";
 
 // ✅ cart api (logged in)
 import { useGetMyCartQuery, useAddToCartMutation } from "../features/cart/cartAPI";
@@ -489,6 +492,8 @@ export default function ProductDetailsPage() {
           </div>
         )}
       </div>
+      <FooterTop />
+      <FooterBottom />
     </div>
   );
 }

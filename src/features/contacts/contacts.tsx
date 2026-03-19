@@ -3,6 +3,8 @@ import { useEffect, useMemo, useState } from "react";
 import { CheckCircle2, XCircle, X } from "lucide-react";
 import { useCreateContactMutation } from "../../features/contacts/contactsAPI";
 import type { ContactCreateInput } from "../../features/contacts/contactsAPI";
+import FooterTop from "../../components/footer/FooterTop";
+import FooterBottom from "../../components/footer/FooterBottom";
 
 type Errors = Partial<Record<keyof ContactCreateInput, string>>;
 type ToastType = "success" | "error";
@@ -278,6 +280,8 @@ export default function UserContacts() {
           </div>
         </div>
       </div>
+      <FooterTop />
+      <FooterBottom />
     </div>
   );
 }

@@ -11,6 +11,8 @@ import {
   Ruler,
 } from "lucide-react";
 import SEOHelmet from "../utils/SEOHelmet";
+import FooterTop from "../components/footer/FooterTop";
+import FooterBottom from "../components/footer/FooterBottom";
 
 type BlogPost = {
   id: string;
@@ -310,6 +312,8 @@ export default function Blog() {
           </div>
         )}
       </div>
+      <FooterTop />
+      <FooterBottom />
     </div>
   );
 }

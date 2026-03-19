@@ -4,6 +4,8 @@
 // src/pages/CartPage.tsx
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import FooterTop from "../components/footer/FooterTop";
+import FooterBottom from "../components/footer/FooterBottom";
 import {
   type LocalCart,
   clearLocalCart,
@@ -429,6 +431,8 @@ export default function CartPage() {
           </div>
         )}
       </div>
+      <FooterTop />
+      <FooterBottom />
     </div>
   );
 }

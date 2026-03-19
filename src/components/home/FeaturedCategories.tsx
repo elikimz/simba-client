@@ -3,7 +3,8 @@ import { useListProductsQuery } from "../../features/products/productsAPI";
 import { useMemo } from "react";
 
 const FeaturedCategories = () => {
-  const { data } = useListProductsQuery({ limit: 100 });
+  // Always call hooks at the top level
+  const { data, isLoading, isError } = useListProductsQuery({ limit: 100 });
 
   const categories = useMemo(() => {
     const map = new Map<number, { id: number; name: string; count: number }>();
@@ -43,6 +44,11 @@ const FeaturedCategories = () => {
     return "📦";
   };
 
+  // Handle loading/error states after all hooks are called
+  if (isLoading || isError || categories.length === 0) {
+    return null;
+  }
+
   return (
     <section className="bg-white py-16">
       <div className="mx-auto max-w-[1400px] px-6">
@@ -55,31 +61,25 @@ const FeaturedCategories = () => {
           </p>
         </div>
 
-        {categories.length === 0 ? (
-          <div className="text-center py-8 text-gray-600">
-            No categories available yet
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {categories.map((cat) => (
-              <Link
-                key={cat.id}
-                to={`/category/${cat.id}`}
-                className="group bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-8 text-center hover:shadow-lg transition transform hover:scale-105"
-              >
-                <div className="text-5xl mb-4 group-hover:scale-110 transition">
-                  {getCategoryIcon(cat.name)}
-                </div>
-                <h3 className="text-xl font-bold text-indigo-900 mb-2 group-hover:text-indigo-700">
-                  {cat.name}
-                </h3>
-                <p className="text-sm text-gray-600">
-                  {cat.count} product{cat.count !== 1 ? "s" : ""}
-                </p>
-              </Link>
-            ))}
-          </div>
-        )}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {categories.map((cat) => (
+            <Link
+              key={cat.id}
+              to={`/category/${cat.id}`}
+              className="group bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-8 text-center hover:shadow-lg transition transform hover:scale-105"
+            >
+              <div className="text-5xl mb-4 group-hover:scale-110 transition">
+                {getCategoryIcon(cat.name)}
+              </div>
+              <h3 className="text-xl font-bold text-indigo-900 mb-2 group-hover:text-indigo-700">
+                {cat.name}
+              </h3>
+              <p className="text-sm text-gray-600">
+                {cat.count} product{cat.count !== 1 ? "s" : ""}
+              </p>
+            </Link>
+          ))}
+        </div>
       </div>
     </section>
   );

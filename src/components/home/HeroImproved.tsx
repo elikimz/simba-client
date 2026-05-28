@@ -1,117 +1,124 @@
 import { Link } from "react-router-dom";
 
-const mapEmbedUrl = "https://www.google.com/maps?q=-0.222208,35.881353&z=16&output=embed";
-const directionsUrl = "https://maps.app.goo.gl/hnmWMkXkQscuYyar6?g_st=aw";
 const phoneNumber = "+254731030404";
+const directionsUrl = "https://maps.app.goo.gl/hnmWMkXkQscuYyar6";
 const whatsappNumber = "254731030404";
 const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
   "Hi National Simba Cements, I would like to inquire about cement prices and delivery."
 )}`;
+const mapEmbedUrl = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.8246468844367!2d35.88135!3d-0.222208!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0!2s0x0!5e0!3m2!1sen!2ske!4v1234567890`;
 
 const HeroImproved = () => {
   return (
-    <section
-      id="contact"
-      className="relative bg-gradient-to-r from-indigo-950 via-indigo-900 to-indigo-950 py-16 text-white md:py-24"
-    >
-      <div className="mx-auto max-w-[1400px] px-6">
-        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
-          <div>
-            <p className="mb-4 inline-flex rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-indigo-100 ring-1 ring-white/20">
-              National Simba Cements Wholesale Distributor
-            </p>
+    <section className="relative min-h-screen bg-gradient-to-br from-premium-dark via-slate-900 to-premium-dark overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-20 right-20 w-96 h-96 bg-premium-accent rounded-full blur-3xl animate-pulse-subtle"></div>
+        <div className="absolute bottom-20 left-20 w-72 h-72 bg-luxury-gold rounded-full blur-3xl animate-pulse-subtle" style={{ animationDelay: '1s' }}></div>
+      </div>
 
-            <h1 className="mb-6 text-4xl font-extrabold leading-tight md:text-6xl">
-              Premium Cement & Building Materials in Kenya
+      <div className="relative z-10 mx-auto max-w-[1400px] px-6 py-20 md:py-32">
+        <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
+          {/* Left Content */}
+          <div className="animate-slide-up">
+            <div className="mb-8 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 backdrop-blur-md border border-white/20">
+              <span className="inline-flex h-2 w-2 rounded-full bg-premium-accent animate-pulse"></span>
+              <span className="text-sm font-semibold text-white">Premium Cement Distributor</span>
+            </div>
+
+            <h1 className="mb-6 text-5xl md:text-7xl font-display font-bold leading-tight text-white">
+              Build with <span className="bg-gradient-to-r from-premium-accent to-luxury-gold bg-clip-text text-transparent">Excellence</span>
             </h1>
 
-            <p className="mb-8 max-w-2xl text-lg leading-relaxed text-indigo-100 md:text-xl">
-              Simba Cement delivers genuine cement and quality construction
-              materials with fast, reliable delivery for residential,
-              commercial and industrial building projects.
+            <p className="mb-8 max-w-2xl text-lg leading-relaxed text-slate-300">
+              National Simba Cements delivers premium building materials with unmatched quality and reliability. From residential to industrial projects, we're your trusted partner in construction.
             </p>
 
-            <div className="mb-8 grid gap-3 rounded-2xl bg-white/10 p-5 text-sm shadow-2xl ring-1 ring-white/15 sm:grid-cols-2">
-              <a
-                href={`tel:${phoneNumber}`}
-                className="rounded-xl bg-white px-4 py-3 font-bold text-indigo-950 transition hover:bg-indigo-50"
+            {/* CTA Buttons */}
+            <div className="mb-12 flex flex-col gap-4 sm:flex-row">
+              <Link
+                to="/shop"
+                className="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-premium-accent to-luxury-gold px-8 py-4 text-lg font-bold text-premium-dark transition-all duration-300 hover:shadow-luxury hover:scale-105"
               >
-                Call: {phoneNumber}
-              </a>
+                Shop Now
+              </Link>
               <a
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="rounded-xl bg-green-500 px-4 py-3 font-bold text-white transition hover:bg-green-600"
+                className="inline-flex items-center justify-center rounded-xl border-2 border-white px-8 py-4 text-lg font-bold text-white transition-all duration-300 hover:bg-white/10 hover:backdrop-blur-md"
               >
-                WhatsApp: {phoneNumber}
-              </a>
-              <a
-                href="mailto:info@nationalsimbacements.site"
-                className="rounded-xl bg-indigo-800 px-4 py-3 font-semibold text-white transition hover:bg-indigo-700"
-              >
-                info@nationalsimbacements.site
-              </a>
-              <a
-                href={directionsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-xl bg-indigo-800 px-4 py-3 font-semibold text-white transition hover:bg-indigo-700"
-              >
-                View Location on Google Maps
+                Order via WhatsApp
               </a>
             </div>
 
-            <div className="flex flex-col gap-4 sm:flex-row">
-              <Link
-                to="/shop"
-                className="inline-block rounded-lg bg-white px-8 py-4 text-center font-bold text-indigo-900 transition hover:bg-gray-100"
-              >
-                Shop Now
-              </Link>
-              <Link
-                to="/contact"
-                className="inline-block rounded-lg border-2 border-white px-8 py-4 text-center font-bold text-white transition hover:bg-white hover:text-indigo-900"
-              >
-                Send Message
-              </Link>
-            </div>
-
-            <div className="mt-10 grid grid-cols-2 gap-4 text-sm text-indigo-50 sm:grid-cols-4">
-              <span className="rounded-xl bg-white/10 px-4 py-3">Fast Delivery</span>
-              <span className="rounded-xl bg-white/10 px-4 py-3">Quality Guaranteed</span>
-              <span className="rounded-xl bg-white/10 px-4 py-3">Best Prices</span>
-              <span className="rounded-xl bg-white/10 px-4 py-3">Expert Support</span>
-            </div>
-          </div>
-
-          <div className="rounded-3xl bg-white p-4 text-gray-900 shadow-2xl">
-            <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <h2 className="text-xl font-extrabold text-indigo-950">Our Location</h2>
-                <p className="text-sm text-gray-600">Visit or request delivery from our Google Maps pin.</p>
+            {/* Contact Info Grid */}
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+              <div className="rounded-xl bg-white/5 backdrop-blur-md border border-white/10 p-4">
+                <div className="text-sm text-slate-400">Phone</div>
+                <a href={`tel:${phoneNumber}`} className="text-lg font-bold text-premium-accent hover:text-luxury-gold">
+                  {phoneNumber}
+                </a>
               </div>
-              <a
-                href={directionsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-full bg-indigo-900 px-4 py-2 text-center text-sm font-bold text-white hover:bg-indigo-800"
-              >
-                Get Directions
-              </a>
-            </div>
-
-            <div className="overflow-hidden rounded-2xl border border-gray-200">
-              <iframe
-                title="National Simba Cements Google Maps location"
-                src={mapEmbedUrl}
-                className="h-[320px] w-full border-0 md:h-[420px]"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                allowFullScreen
-              />
+              <div className="rounded-xl bg-white/5 backdrop-blur-md border border-white/10 p-4">
+                <div className="text-sm text-slate-400">Email</div>
+                <a href="mailto:info@nationalsimbacements.site" className="text-sm font-bold text-premium-accent hover:text-luxury-gold truncate">
+                  info@nationalsimbacements.site
+                </a>
+              </div>
+              <div className="rounded-xl bg-white/5 backdrop-blur-md border border-white/10 p-4">
+                <div className="text-sm text-slate-400">Location</div>
+                <a href={directionsUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-premium-accent hover:text-luxury-gold">
+                  View Map
+                </a>
+              </div>
             </div>
           </div>
+
+          {/* Right: Premium Map Card */}
+          <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
+            <div className="rounded-3xl overflow-hidden shadow-luxury backdrop-blur-md border border-white/10 bg-white/5">
+              <div className="relative h-[500px] overflow-hidden">
+                <iframe
+                  title="National Simba Cements Location"
+                  src={mapEmbedUrl}
+                  className="h-full w-full border-0"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  allowFullScreen
+                />
+              </div>
+              <div className="bg-gradient-to-r from-premium-dark to-slate-900 p-6 border-t border-white/10">
+                <h3 className="text-lg font-bold text-white mb-2">Visit Our Location</h3>
+                <p className="text-slate-400 text-sm mb-4">
+                  Nakuru-Nyahururu Rd, Nakuru, Kenya
+                </p>
+                <a
+                  href={directionsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-premium-accent hover:text-luxury-gold font-semibold transition-colors"
+                >
+                  Get Directions →
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Trust Indicators */}
+        <div className="mt-20 grid grid-cols-2 gap-4 md:grid-cols-4">
+          {[
+            { label: "Years in Business", value: "10+" },
+            { label: "Products", value: "500+" },
+            { label: "Happy Clients", value: "5000+" },
+            { label: "Delivery Coverage", value: "All Kenya" },
+          ].map((stat) => (
+            <div key={stat.label} className="rounded-xl bg-white/5 backdrop-blur-md border border-white/10 p-4 text-center">
+              <div className="text-2xl md:text-3xl font-bold text-premium-accent">{stat.value}</div>
+              <div className="text-xs md:text-sm text-slate-400 mt-2">{stat.label}</div>
+            </div>
+          ))}
         </div>
       </div>
     </section>

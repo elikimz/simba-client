@@ -85,10 +85,10 @@ export default function CategoryPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <SEOHelmet
-        title={`${categoryName} - Simba Cement`}
-        description={`Browse our selection of ${categoryName} products. Quality building materials from Simba Cement with fast delivery.`}
-        keywords={`${categoryName}, cement, building materials, construction supplies`}
-        ogTitle={`${categoryName} - Simba Cement`}
+        title={`${categoryName} - Wholesale Building Materials | National Simba Cements`}
+        description={`Explore our high-quality ${categoryName} collection. National Simba Cements provides premium building materials with fast delivery across Kenya. Shop ${categoryName} at the best wholesale prices.`}
+        keywords={`${categoryName}, buy ${categoryName} Kenya, ${categoryName} wholesale, building materials, construction supplies`}
+        ogTitle={`${categoryName} - National Simba Cements`}
         ogDescription={`Shop ${categoryName} products from Simba Cement`}
         canonicalUrl={`https://nationalsimbacements.site/category/${id}`}
       />

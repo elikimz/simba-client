@@ -222,10 +222,10 @@ export default function ProductDetailsPage() {
   return (
     <div className="min-h-screen bg-gray-100">
       <SEOHelmet
-        title={p ? `${p.name} - Simba Cement` : "Product Details - Simba Cement"}
-        description={p ? p.description || `Buy ${p.name} from Simba Cement. Price: ${kes(realPrice)}` : "View product details from Simba Cement"}
-        keywords={p ? `${p.name}, cement, construction materials` : "cement, construction materials"}
-        ogTitle={p ? `${p.name} - Simba Cement` : "Product Details"}
+        title={p ? `${p.name} - Buy at Best Price | National Simba Cements` : "Product Details - National Simba Cements"}
+        description={p ? `Get ${p.name} from National Simba Cements. ${p.description ? p.description.substring(0, 120) : "Premium building materials"}... Best wholesale prices and fast delivery in Kenya.` : "View premium cement and building materials from National Simba Cements."}
+        keywords={p ? `${p.name}, ${p.name} price Kenya, buy ${p.name}, cement wholesale, building materials Kenya` : "cement, construction materials, building supplies Kenya"}
+        ogTitle={p ? `${p.name} - National Simba Cements` : "Product Details"}
         ogDescription={p ? p.description || `Buy ${p.name}` : "View product details"}
         ogImage={activeImage || p?.image_url || undefined}
         canonicalUrl={`https://nationalsimbacements.site/product/${id}`}
@@ -245,7 +245,7 @@ export default function ProductDetailsPage() {
               "mpn": "${p.id}",
               "brand": {
                 "@type": "Brand",
-                "name": "Simba Cement"
+                "name": "National Simba Cements"
               },
               "offers": {
                 "@type": "Offer",

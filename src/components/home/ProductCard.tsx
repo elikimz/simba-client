@@ -140,7 +140,7 @@
 //           <div className="aspect-[4/3] md:aspect-square w-full">
 //             <img
 //               src={image}
-//               alt={name}
+//               alt={`${name} - Premium Building Materials | National Simba Cements`}
 //               loading="lazy"
 //               className="
 //                 h-full w-full
@@ -471,7 +471,7 @@ export default function ProductCard({
           <div className="aspect-[4/3] md:aspect-square w-full">
             <img
               src={image}
-              alt={name}
+              alt={`${name} - Premium Building Materials | National Simba Cements`}
               loading={id <= 5 ? "eager" : "lazy"}
               fetchPriority={id <= 5 ? "high" : "auto"}
               className="

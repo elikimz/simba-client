@@ -149,7 +149,7 @@
 
 //           {/* Footer note */}
 //           <div className="border-t px-5 py-4 text-xs text-gray-500">
-//             Copyright 2026 © National Simba Cements. All right reserved. Powered by Luxully.
+//             Copyright 2026 © National Simba Cements. All right reserved. 
 //           </div>
 //         </div>
 //       </aside>

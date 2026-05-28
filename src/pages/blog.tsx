@@ -149,8 +149,8 @@ export default function Blog() {
         keywords="cement blog, construction tips, steel grades, building guides"
         ogTitle="Simba Hardware Blog"
         ogDescription="Expert construction tips and building material guides."
-        ogUrl="https://www.simbacementwholesalesdistributor.co.ke/blog"
-        canonicalUrl="https://www.simbacementwholesalesdistributor.co.ke/blog"
+        ogUrl="https://nationalsimbacements.site/blog"
+        canonicalUrl="https://nationalsimbacements.site/blog"
       />
       <div className="pointer-events-none fixed inset-x-0 top-0 -z-10 h-56 bg-gradient-to-b from-fuchsia-100/50 via-pink-100/30 to-transparent" />
 

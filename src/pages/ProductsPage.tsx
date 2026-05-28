@@ -100,7 +100,7 @@ export default function ProductsPage() {
         keywords="cement, building materials, construction supplies, shop, buy online"
         ogTitle="Shop All Products - Simba Cement"
         ogDescription="Browse our complete selection of cement and building materials"
-        canonicalUrl="https://www.simbacementwholesalesdistributor.co.ke/shop"
+        canonicalUrl="https://nationalsimbacements.site/shop"
       />
 
       {loggedIn ? (

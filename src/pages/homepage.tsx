@@ -17,13 +17,13 @@ const HomePage = () => {
   return (
     <div className="min-h-screen bg-white">
       <SEOHelmet
-        title="Simba Cement - Premium Quality Cement & Construction Materials"
-        description="Discover high-quality cement and construction materials from Simba Cement. Shop premium cement for your building projects with fast delivery."
+        title="National Simba Cements - Premium Cement & Building Materials"
+        description="Discover high-quality cement and construction materials from National Simba Cements. Shop premium cement for your building projects with fast delivery across Kenya."
         keywords="cement, construction materials, building supplies, quality cement, premium cement"
-        ogTitle="Simba Cement - Premium Quality Cement"
-        ogDescription="Discover high-quality cement and construction materials from Simba Cement. Perfect for your building projects."
-        ogUrl="https://www.simbacementwholesalesdistributor.co.ke"
-        canonicalUrl="https://www.simbacementwholesalesdistributor.co.ke"
+        ogTitle="National Simba Cements - Premium Quality Cement"
+        ogDescription="Discover high-quality cement and construction materials from National Simba Cements. Perfect for your building projects."
+        ogUrl="https://nationalsimbacements.site"
+        canonicalUrl="https://nationalsimbacements.site"
       />
       <Navbar />
       <HeroImproved />

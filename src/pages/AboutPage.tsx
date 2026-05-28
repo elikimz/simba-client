@@ -7,12 +7,12 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-white">
       <SEOHelmet
-        title="About Simba Cement - Quality Building Materials"
-        description="Learn about Simba Cement. We provide premium quality cement and construction materials with fast delivery across Kenya."
+        title="About National Simba Cements - Quality Building Materials"
+        description="Learn about National Simba Cements. We provide premium quality cement and construction materials with fast delivery across Kenya."
         keywords="about Simba Cement, company, quality, building materials"
         ogTitle="About Simba Cement"
         ogDescription="Premium quality cement and construction materials"
-        canonicalUrl="https://www.simbacementwholesalesdistributor.co.ke/about"
+        canonicalUrl="https://nationalsimbacements.site/about"
       />
 
       <Navbar />

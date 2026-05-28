@@ -90,7 +90,7 @@ export default function CategoryPage() {
         keywords={`${categoryName}, cement, building materials, construction supplies`}
         ogTitle={`${categoryName} - Simba Cement`}
         ogDescription={`Shop ${categoryName} products from Simba Cement`}
-        canonicalUrl={`https://www.simbacementwholesalesdistributor.co.ke/category/${id}`}
+        canonicalUrl={`https://nationalsimbacements.site/category/${id}`}
       />
 
       {loggedIn ? (

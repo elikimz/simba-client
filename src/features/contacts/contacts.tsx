@@ -6,6 +6,11 @@ import type { ContactCreateInput } from "../../features/contacts/contactsAPI";
 import FooterTop from "../../components/footer/FooterTop";
 import FooterBottom from "../../components/footer/FooterBottom";
 
+const mapEmbedUrl = "https://www.google.com/maps?q=-0.222208,35.881353&z=16&output=embed";
+const directionsUrl = "https://maps.app.goo.gl/hnmWMkXkQscuYyar6?g_st=aw";
+const phoneNumber = "+254731030404";
+const whatsappUrl = "https://wa.me/254731030404?text=Hi%20National%20Simba%20Cements%2C%20I%20would%20like%20to%20inquire%20about%20cement%20prices%20and%20delivery.";
+
 type Errors = Partial<Record<keyof ContactCreateInput, string>>;
 type ToastType = "success" | "error";
 
@@ -207,7 +212,45 @@ export default function UserContacts() {
 
       <div className="pointer-events-none fixed inset-x-0 top-0 -z-10 h-56 bg-gradient-to-b from-fuchsia-100/50 via-pink-100/30 to-transparent" />
 
-      <div className="mx-auto w-full max-w-2xl px-4 py-10">
+      <div className="mx-auto grid w-full max-w-6xl gap-6 px-4 py-10 lg:grid-cols-[0.95fr_1.05fr]">
+        <aside className="rounded-3xl border border-slate-200 bg-white/90 p-6 shadow-sm">
+          <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-fuchsia-700">
+            Contact details
+          </p>
+          <h1 className="mt-2 text-2xl font-extrabold tracking-tight text-slate-950">
+            National Simba Cements
+          </h1>
+          <p className="mt-3 text-sm leading-6 text-slate-600">
+            Call, WhatsApp, email, or use the map below to reach our Google Maps location for orders and delivery support.
+          </p>
+
+          <div className="mt-5 grid gap-3 text-sm">
+            <a href={`tel:${phoneNumber}`} className="rounded-2xl bg-slate-100 px-4 py-3 font-bold text-slate-950 hover:bg-slate-200">
+              Call: {phoneNumber}
+            </a>
+            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="rounded-2xl bg-green-600 px-4 py-3 font-bold text-white hover:bg-green-700">
+              WhatsApp: {phoneNumber}
+            </a>
+            <a href="mailto:info@nationalsimbacements.site" className="rounded-2xl bg-slate-100 px-4 py-3 font-semibold text-slate-900 hover:bg-slate-200">
+              info@nationalsimbacements.site
+            </a>
+            <a href={directionsUrl} target="_blank" rel="noopener noreferrer" className="rounded-2xl bg-fuchsia-700 px-4 py-3 font-bold text-white hover:bg-fuchsia-800">
+              Get Directions on Google Maps
+            </a>
+          </div>
+
+          <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200">
+            <iframe
+              title="National Simba Cements Google Maps location"
+              src={mapEmbedUrl}
+              className="h-[300px] w-full border-0"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              allowFullScreen
+            />
+          </div>
+        </aside>
+
         <div className="rounded-3xl border border-slate-200 bg-white/90 shadow-sm">
           <div className="border-b border-slate-100 px-6 py-5">
             <h1 className="text-xl font-extrabold tracking-tight">Contact us</h1>

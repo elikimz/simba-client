@@ -228,7 +228,7 @@ export default function ProductDetailsPage() {
         ogTitle={p ? `${p.name} - Simba Cement` : "Product Details"}
         ogDescription={p ? p.description || `Buy ${p.name}` : "View product details"}
         ogImage={activeImage || p?.image_url || undefined}
-        canonicalUrl={`https://www.simbacementwholesalesdistributor.co.ke/product/${id}`}
+        canonicalUrl={`https://nationalsimbacements.site/product/${id}`}
       />
 
       {/* Product Schema Markup */}
@@ -249,7 +249,7 @@ export default function ProductDetailsPage() {
               },
               "offers": {
                 "@type": "Offer",
-                "url": "https://www.simbacementwholesalesdistributor.co.ke/product/${p.id}",
+                "url": "https://nationalsimbacements.site/product/${p.id}",
                 "priceCurrency": "KES",
                 "price": "${realPrice}",
                 "itemCondition": "https://schema.org/NewCondition",

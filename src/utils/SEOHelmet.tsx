@@ -15,17 +15,17 @@ interface SEOHelmetProps {
 }
 
 const SEOHelmet: React.FC<SEOHelmetProps> = ({
-  title = 'Simba Cement - Premium Quality Cement & Construction Materials',
-  description = 'Discover high-quality cement and construction materials from Simba Cement. Perfect for your building projects.',
+  title = 'National Simba Cements - Premium Cement & Building Materials',
+  description = 'Discover high-quality cement and construction materials from National Simba Cements. Perfect for your building projects.',
   keywords = 'cement, construction materials, building supplies, quality cement',
   ogTitle,
   ogDescription,
   ogImage,
-  ogUrl = 'https://www.simbacementwholesalesdistributor.co.ke',
+  ogUrl = 'https://nationalsimbacements.site',
   twitterCard = 'summary_large_image',
   twitterTitle,
   twitterDescription,
-  canonicalUrl = 'https://www.simbacementwholesalesdistributor.co.ke',
+  canonicalUrl = 'https://nationalsimbacements.site',
 }) => {
   React.useEffect(() => {
     // Update document title

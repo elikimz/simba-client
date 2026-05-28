@@ -31,13 +31,28 @@ const FooterTop = () => {
               <p>Saturday: 9:00 – 15:00</p>
             </div>
 
-            <a
-              href="mailto:info@simbacementwholesalesdistributor.co.ke"
-              className="mt-6 inline-block text-sm text-blue-600 hover:underline"
-            >
-              simbacement775@gmail.com
-              info@simbacementwholesalesdistributor.co.ke
-            </a>
+            <div className="mt-6 space-y-2 text-sm">
+              <a
+                href="mailto:info@nationalsimbacements.site"
+                className="block text-blue-600 hover:underline"
+              >
+                info@nationalsimbacements.site
+              </a>
+              <a
+                href="mailto:simbacement775@gmail.com"
+                className="block text-blue-600 hover:underline"
+              >
+                simbacement775@gmail.com
+              </a>
+              <a
+                href="https://maps.app.goo.gl/hnmWMkXkQscuYyar6?g_st=aw"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block text-indigo-700 hover:underline"
+              >
+                View our location on Google Maps
+              </a>
+            </div>
           </div>
 
           {/* Customer Service */}

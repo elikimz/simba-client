@@ -30,7 +30,7 @@
 //         <div className="flex items-center justify-between border-b px-5 py-4">
 //           <div>
 //             <div className="text-base font-semibold text-gray-900">
-//               Maisha Mabati
+//               National Simba Cements
 //             </div>
 //             <div className="text-xs text-gray-500">Main Menu</div>
 //           </div>
@@ -129,7 +129,7 @@
 
 //               <div className="mt-4 space-y-4 text-sm text-gray-700">
 //                 <div>
-//                   <div className="font-semibold text-gray-900">+254789486699</div>
+//                   <div className="font-semibold text-gray-900">+254731030404</div>
 //                   <div className="text-xs text-gray-500">
 //                     You can call anytime from 9 am to 6 pm.
 //                   </div>
@@ -137,7 +137,7 @@
 
 //                 <div>
 //                   <div className="font-semibold text-gray-900">
-//                     info@devkisteelmaishamabati.co.ke
+//                     info@nationalsimbacements.site
 //                   </div>
 //                   <div className="text-xs text-gray-500">
 //                     The e-mail you sent will be returned as soon as possible.
@@ -149,7 +149,7 @@
 
 //           {/* Footer note */}
 //           <div className="border-t px-5 py-4 text-xs text-gray-500">
-//             Copyright 2026 © Maisha Mabati. All right reserved. Powered by Luxully.
+//             Copyright 2026 © National Simba Cements. All right reserved. Powered by Luxully.
 //           </div>
 //         </div>
 //       </aside>

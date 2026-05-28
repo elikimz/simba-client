@@ -1,44 +1,36 @@
-// const TopBar = () => {
-//   return (
-//     <div className="w-full border-b bg-white">
-//       <div className="mx-auto flex max-w-[1400px] items-center justify-between px-6 py-3 text-sm">
-//         {/* Left links */}
-//         <div className="flex items-center gap-8 text-gray-800">
-//           <a href="#" className="hover:underline">About Us</a>
-//           <a href="#" className="hover:underline">My account</a>
-//           <a href="#" className="hover:underline">Order Tracking</a>
-//           <a href="#" className="hover:underline">Wishlist</a>
-//         </div>
+import { Mail, Phone, MapPin } from "lucide-react";
 
-//         {/* Right help + dropdowns */}
-//         <div className="flex items-center gap-8">
-//           <div className="text-gray-700">
-//             Need help? Call us:{" "}
-//             <span className="font-semibold text-gray-900">0789486699</span>{" "}
-//             or{" "}
-//             <span className="font-semibold text-gray-900">
-//               info@devkisteelmaishamabati.co.ke
-//             </span>
-//           </div>
+const TopBar = () => {
+  const phoneNumber = "+254731030404";
+  const email = "info@nationalsimbacements.site";
+  
+  return (
+    <div className="w-full border-b bg-slate-50">
+      <div className="mx-auto flex max-w-[1400px] flex-col items-center justify-between gap-2 px-4 py-2 text-xs font-medium text-slate-600 sm:flex-row sm:px-6 lg:px-8">
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-1.5">
+            <Phone className="h-3.5 w-3.5 text-indigo-600" />
+            <span>Call us: <a href={`tel:${phoneNumber}`} className="font-bold text-slate-900 hover:text-indigo-600">{phoneNumber}</a></span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <Mail className="h-3.5 w-3.5 text-indigo-600" />
+            <a href={`mailto:${email}`} className="hover:text-indigo-600">{email}</a>
+          </div>
+        </div>
+        
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-1.5">
+            <MapPin className="h-3.5 w-3.5 text-indigo-600" />
+            <span>Nakuru-Nyahururu Rd, Nakuru, Kenya</span>
+          </div>
+          <div className="hidden h-3 w-px bg-slate-300 md:block"></div>
+          <div className="hidden items-center gap-4 md:flex">
+            <span className="text-indigo-600">Wholesale Cement Distributor</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-//           <div className="flex items-center gap-6 font-medium text-gray-900">
-//             <button className="flex items-center gap-2 hover:text-gray-700">
-//               English
-//               <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-//                 <path d="M5.5 7.5l4.5 4.5 4.5-4.5" />
-//               </svg>
-//             </button>
-//             <button className="flex items-center gap-2 hover:text-gray-700">
-//               USD
-//               <svg className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-//                 <path d="M5.5 7.5l4.5 4.5 4.5-4.5" />
-//               </svg>
-//             </button>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default TopBar;
+export default TopBar;

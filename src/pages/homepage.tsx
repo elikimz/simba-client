@@ -5,7 +5,7 @@ import FeaturedCategories from "../components/home/FeaturedCategories";
 import AboutSection from "../components/home/AboutSection";
 import DealsSection from "../components/home/DealAection";
 import ProductsShowcase from "../components/home/ProductsShowcase";
-import WhyMaisha from "../components/home/WhyMaisha";
+import WhySimba from "../components/home/WhySimba";
 import PromoBanner from "../components/home/PromoBanner";
 import TestimonialsIntro from "../components/home/TestimonialsIntro";
 import TestimonialsSection from "../components/home/Testimonials";
@@ -32,7 +32,7 @@ const HomePage = () => {
       <AboutSection />
       <DealsSection />
       <ProductsShowcase />
-      <WhyMaisha />
+      <WhySimba />
       <PromoBanner />
       <TestimonialsIntro />
       <TestimonialsSection />

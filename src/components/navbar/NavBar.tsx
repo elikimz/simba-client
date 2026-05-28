@@ -1,11 +1,11 @@
-// import TopBar from "./TopUtilityBar";
+import TopBar from "./TopUtilityBar";
 import MainHeader from "./MainHeader";
 import NavRow from "./NavRow";
 
 const Navbar = () => {
   return (
     <header>
-      {/* <TopBar /> */}
+      <TopBar />
       <MainHeader />
       <NavRow />
     </header>

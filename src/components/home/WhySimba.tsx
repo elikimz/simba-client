@@ -11,7 +11,7 @@
 //   "Trusted by contractors, site supervisors and home owners",
 // ];
 
-// const WhyMaisha = () => {
+// const WhySimba = () => {
 //   return (
 //     <section className="bg-gray-100 py-14">
 //       <div className="mx-auto max-w-[1400px] px-6">
@@ -71,11 +71,11 @@
 //   );
 // };
 
-// export default WhyMaisha;
+// export default WhySimba;
 
 
 
-// src/components/WhyMaisha.tsx
+// src/components/WhySimba.tsx
 import { useMemo } from "react";
 import { useListActiveBannersQuery } from "../../features/banner/bannerAPI"; // ✅ adjust path
 
@@ -103,7 +103,7 @@ function pickBannerImageUrl(banner: any): string | null {
   return imgs[0]?.url ?? null;
 }
 
-const WhyMaisha = () => {
+const WhySimba = () => {
 
   const { data: banners, isLoading, isError } = useListActiveBannersQuery();
 
@@ -189,4 +189,4 @@ const WhyMaisha = () => {
   );
 };
 
-export default WhyMaisha;
+export default WhySimba;

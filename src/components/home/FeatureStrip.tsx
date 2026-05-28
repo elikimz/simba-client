@@ -2,19 +2,19 @@
 //   {
 //     title: "Quality You Can Trust",
 //     description:
-//       "At Maisha Mabati Mills, quality is at the core of everything we do. Our roofing sheets are manufactured using state-of-the-art technology at our modern alu-zinc plant in Ruiru.",
+//       "At National Simba Cements Mills, quality is at the core of everything we do. Our roofing sheets are manufactured using state-of-the-art technology at our modern alu-zinc plant in Ruiru.",
 //     icon: "📦",
 //   },
 //   {
 //     title: "Amazing Offers",
 //     description:
-//       "We believe every Kenyan deserves access to strong, reliable roofing without overpaying. That’s why Maisha Mabati offers competitively priced solutions.",
+//       "We believe every Kenyan deserves access to strong, reliable roofing without overpaying. That’s why National Simba Cements offers competitively priced solutions.",
 //     icon: "💰",
 //   },
 //   {
 //     title: "Fast & Reliable Delivery",
 //     description:
-//       "With an efficient production system and a strong distribution network, Maisha Mabati ensures timely and dependable delivery across Kenya.",
+//       "With an efficient production system and a strong distribution network, National Simba Cements ensures timely and dependable delivery across Kenya.",
 //     icon: "🚚",
 //   },
 // ];

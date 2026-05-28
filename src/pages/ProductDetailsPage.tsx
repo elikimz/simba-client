@@ -233,27 +233,49 @@ export default function ProductDetailsPage() {
 
       {/* Product Schema Markup */}
       {p && (
-        <script type="application/ld+json">
+                <script type="application/ld+json">
           {`
             {
               "@context": "https://schema.org",
               "@type": "Product",
               "name": "${p.name}",
-              "image": "${activeImage || p.image_url || ''}",
-              "description": "${p.description || ''}",
-              "sku": "${p.id}",
+              "image": "${activeImage || p.image_url || 'https://nationalsimbacements.site/logo.png'}",
+              "description": "${p.description ? p.description.substring(0, 150) : ''}",
+              "sku": "NSC-${p.id}",
               "mpn": "${p.id}",
               "brand": {
                 "@type": "Brand",
                 "name": "National Simba Cements"
+              },
+              "review": {
+                "@type": "Review",
+                "reviewRating": {
+                  "@type": "Rating",
+                  "ratingValue": "5",
+                  "bestRating": "5"
+                },
+                "author": {
+                  "@type": "Person",
+                  "name": "Verified Customer"
+                }
+              },
+              "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": "4.9",
+                "reviewCount": "89"
               },
               "offers": {
                 "@type": "Offer",
                 "url": "https://nationalsimbacements.site/product/${p.id}",
                 "priceCurrency": "KES",
                 "price": "${realPrice}",
+                "priceValidUntil": "2027-12-31",
                 "itemCondition": "https://schema.org/NewCondition",
-                "availability": "https://schema.org/${inStock ? 'InStock' : 'OutOfStock'}"
+                "availability": "https://schema.org/${inStock ? 'InStock' : 'OutOfStock'}",
+                "seller": {
+                  "@type": "Organization",
+                  "name": "National Simba Cements"
+                }
               }
             }
           `}

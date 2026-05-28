@@ -10,7 +10,7 @@ const mapEmbedUrl = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.
 
 const HeroImproved = () => {
   return (
-    <section className="relative min-h-screen bg-gradient-to-br from-premium-dark via-slate-900 to-premium-dark overflow-hidden">
+    <section className="relative min-h-screen bg-gradient-to-br from-premium-dark via-premium-dark to-premium-dark overflow-hidden">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-20 right-20 w-96 h-96 bg-premium-accent rounded-full blur-3xl animate-pulse-subtle"></div>
@@ -88,7 +88,7 @@ const HeroImproved = () => {
                   allowFullScreen
                 />
               </div>
-              <div className="bg-gradient-to-r from-premium-dark to-slate-900 p-6 border-t border-white/10">
+              <div className="bg-gradient-to-r from-premium-dark to-premium-dark p-6 border-t border-white/10">
                 <h3 className="text-lg font-bold text-white mb-2">Visit Our Location</h3>
                 <p className="text-slate-400 text-sm mb-4">
                   Nakuru-Nyahururu Rd, Nakuru, Kenya

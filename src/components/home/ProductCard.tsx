@@ -63,7 +63,7 @@ const ProductCard = ({ id, image, name, price, max_price, inStock, categoryName 
         {/* Stock Badge */}
         <div className="absolute left-4 top-4">
           {inStock ? (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/90 backdrop-blur-md px-3 py-1.5 text-xs font-bold text-white">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-indigo-600/90 backdrop-blur-md px-3 py-1.5 text-xs font-bold text-white">
               <span className="inline-block h-2 w-2 rounded-full bg-white animate-pulse"></span>
               In Stock
             </span>
@@ -108,7 +108,7 @@ const ProductCard = ({ id, image, name, price, max_price, inStock, categoryName 
             target="_blank"
             rel="noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 px-4 py-3 text-sm font-bold text-white hover:shadow-lg transition-all duration-300"
+            className="inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-emerald-500 to-indigo-700 px-4 py-3 text-sm font-bold text-white hover:shadow-lg transition-all duration-300"
           >
             Order via WhatsApp
           </a>

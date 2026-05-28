@@ -72,13 +72,13 @@ button:hover, a.btn:hover {
 
 /* Premium Links */
 a {
-  color: #D4AF37;
+  color: #312e81; /* indigo-900 */
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 a:hover {
-  color: #F59E0B;
+  color: #4338ca; /* indigo-700 */
 }
 
 /* Smooth Animations */
@@ -120,17 +120,17 @@ a:hover {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #D4AF37;
+  background: #312e81;
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #F59E0B;
+  background: #4338ca;
 }
 
 /* Focus States for Accessibility */
 button:focus, a:focus, input:focus {
-  outline: 2px solid #D4AF37;
+  outline: 2px solid #312e81;
   outline-offset: 2px;
 }
 
@@ -144,17 +144,17 @@ input, textarea, select {
 }
 
 input:focus, textarea:focus, select:focus {
-  border-color: #D4AF37;
-  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+  border-color: #312e81;
+  box-shadow: 0 0 0 3px rgba(49, 46, 129, 0.1);
 }
 
 /* Gradient Backgrounds */
 .gradient-premium {
-  background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
 }
 
 .gradient-gold {
-  background: linear-gradient(135deg, #D4AF37 0%, #F59E0B 100%);
+  background: linear-gradient(135deg, #312e81 0%, #4338ca 100%);
 }
 
 /* Premium Dividers */

@@ -1,125 +1,109 @@
 import { Heart } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
-type Props = {
+interface Product {
   id: number;
-  image: string;
   name: string;
-  price: number | string;
-  max_price?: number | null;
-  inStock: boolean;
+  image_url?: string;
+  image?: string;
+  price?: number;
+  category?: { name: string };
   categoryName?: string;
-};
+  description?: string;
+}
 
-const CALL_NUMBER = "+254731030404";
-const WHATSAPP_NUMBER = "254731030404";
+interface ProductCardProps {
+  product?: Product;
+  id?: number;
+  image?: string;
+  name?: string;
+  price?: number | string;
+  categoryName?: string;
+  inStock?: boolean;
+  onAddToCart?: (product: Product) => void;
+}
 
-const ProductCard = ({ id, image, name, price, max_price, inStock, categoryName }: Props) => {
-  const navigate = useNavigate();
-  const [isWishlisted, setIsWishlisted] = useState(false);
+const ProductCard = ({ product: p, id, image, name, price, categoryName, inStock = true, onAddToCart }: ProductCardProps) => {
+  const [isFavorite, setIsFavorite] = useState(false);
 
-  const displayPrice = useMemo(() => {
-    const p = Number(price || 0);
-    return `KSh${p.toLocaleString()}.00`;
-  }, [price]);
+  // Support both new and old prop formats
+  const productData = p || {
+    id: id || 0,
+    name: name || "",
+    image_url: image || "",
+    price: typeof price === "string" ? parseInt(price) : price || 0,
+    category: categoryName ? { name: categoryName } : undefined,
+  };
 
-  const waText = encodeURIComponent(`Hi, I want to order: ${name}`);
-  const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${waText}`;
-
-  const toggleWishlist = () => setIsWishlisted(!isWishlisted);
+  const realPrice = productData.price || 0;
+  const productImage = productData.image_url || productData.image || "";
+  const productName = productData.name || "";
+  const productCategory = productData.category || (categoryName ? { name: categoryName } : undefined);
 
   return (
-    <div
-      onClick={() => navigate(`/product/${id}`)}
-      className="group relative cursor-pointer h-full flex flex-col rounded-2xl overflow-hidden bg-white shadow-subtle hover:shadow-luxury transition-all duration-500 hover:-translate-y-1"
-    >
-      {/* Image Container */}
-      <div className="relative h-64 overflow-hidden bg-gradient-to-br from-slate-100 to-slate-50">
-        <img
-          src={image}
-          alt={`${name} - Premium Building Materials | National Simba Cements`}
-          className="h-full w-full object-contain p-4 transition-transform duration-500 group-hover:scale-110"
-          loading="lazy"
-          fetchPriority={id <= 5 ? "high" : "auto"}
-        />
-        
-        {/* Overlay Badge */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-        {/* Wishlist Button */}
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            toggleWishlist();
-          }}
-          className="absolute right-4 top-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/90 backdrop-blur-md text-slate-900 hover:bg-premium-accent hover:text-white transition-all duration-300 shadow-md"
-          aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
-        >
-          <Heart className={`h-5 w-5 ${isWishlisted ? "fill-current" : ""}`} />
-        </button>
-
-        {/* Stock Badge */}
-        <div className="absolute left-4 top-4">
-          {inStock ? (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-indigo-600/90 backdrop-blur-md px-3 py-1.5 text-xs font-bold text-white">
-              <span className="inline-block h-2 w-2 rounded-full bg-white animate-pulse"></span>
-              In Stock
-            </span>
-          ) : (
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-500/90 backdrop-blur-md px-3 py-1.5 text-xs font-bold text-white">
-              Out of Stock
-            </span>
-          )}
-        </div>
-      </div>
-
-      {/* Content */}
-      <div className="flex flex-1 flex-col p-5">
-        {/* Title */}
-        <h3 className="mb-2 line-clamp-2 text-sm font-bold text-slate-900 group-hover:text-premium-accent transition-colors">
-          {name}
-        </h3>
-
-        {/* Price */}
-        <div className="mb-4 flex items-baseline gap-2">
-          <span className="text-xl font-black text-premium-accent">{displayPrice}</span>
-          {max_price && (
-            <span className="text-xs text-slate-400 line-through">
-              KSh{Number(max_price).toLocaleString()}.00
-            </span>
-          )}
-        </div>
-
-        {/* Category */}
-        {categoryName && (
-          <div className="mb-4 inline-block">
-            <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
-              {categoryName}
-            </span>
+    <div className="group relative overflow-hidden rounded-xl bg-white shadow-subtle hover:shadow-luxury transition-all duration-300 hover:scale-105">
+      {/* Product Image */}
+      <div className="relative h-48 sm:h-56 overflow-hidden bg-gradient-to-br from-indigo-100 to-indigo-50">
+        {productImage ? (
+          <img
+            src={productImage}
+            alt={`${productName} - Premium Building Materials | National Simba Cements`}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center">
+            <span className="text-indigo-300 text-sm sm:text-base">No Image</span>
           </div>
         )}
 
-        {/* Action Buttons - Hidden until hover */}
-        <div className="mt-auto flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <a
-            href={waLink}
-            target="_blank"
-            rel="noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className="inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-emerald-500 to-indigo-700 px-4 py-3 text-sm font-bold text-white hover:shadow-lg transition-all duration-300"
-          >
-            Order via WhatsApp
-          </a>
-          <a
-            href={`tel:${CALL_NUMBER}`}
-            onClick={(e) => e.stopPropagation()}
-            className="inline-flex w-full items-center justify-center rounded-xl border-2 border-premium-accent bg-white px-4 py-3 text-sm font-bold text-premium-accent hover:bg-premium-accent hover:text-white transition-all duration-300"
-          >
-            Call Now
-          </a>
+        {/* Stock Badge */}
+        {inStock && (
+          <div className="absolute top-2 right-2 sm:top-3 sm:right-3 rounded-full bg-green-500/90 px-2 sm:px-3 py-1 text-xs sm:text-sm font-bold text-white animate-pulse">
+            In Stock
+          </div>
+        )}
+
+        {/* Wishlist Button */}
+        <button
+          onClick={() => setIsFavorite(!isFavorite)}
+          className="absolute top-2 left-2 sm:top-3 sm:left-3 rounded-full bg-white/90 p-2 sm:p-2.5 shadow-md hover:bg-white transition-all"
+        >
+          <Heart
+            className={`h-4 w-4 sm:h-5 sm:w-5 transition-colors ${
+              isFavorite ? "fill-red-500 text-red-500" : "text-gray-400"
+            }`}
+          />
+        </button>
+      </div>
+
+      {/* Product Info */}
+      <div className="p-3 sm:p-4">
+        {/* Category */}
+        {productCategory && (
+          <p className="text-xs text-indigo-600 font-semibold mb-1 uppercase tracking-wide">
+            {productCategory.name}
+          </p>
+        )}
+
+        {/* Product Name */}
+        <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-indigo-700 transition-colors">
+          {productName}
+        </h3>
+
+        {/* Price */}
+        <div className="mb-3 flex items-baseline gap-2">
+          <span className="text-lg sm:text-2xl font-bold text-indigo-700">
+            KSh {typeof realPrice === "number" ? realPrice.toLocaleString() : realPrice}
+          </span>
         </div>
+
+        {/* Action Button */}
+        <button
+          onClick={() => onAddToCart?.(productData as Product)}
+          className="w-full rounded-lg bg-gradient-to-r from-indigo-600 to-indigo-700 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-bold text-white transition-all duration-300 hover:shadow-lg hover:scale-105 active:scale-95"
+        >
+          Add to Cart
+        </button>
       </div>
     </div>
   );

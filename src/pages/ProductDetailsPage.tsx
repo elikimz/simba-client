@@ -233,7 +233,7 @@ export default function ProductDetailsPage() {
 
       {/* Product Schema Markup */}
       {p && (
-                <script type="application/ld+json">
+                        <script type="application/ld+json">
           {`
             {
               "@context": "https://schema.org",
@@ -275,6 +275,41 @@ export default function ProductDetailsPage() {
                 "seller": {
                   "@type": "Organization",
                   "name": "National Simba Cements"
+                },
+                "shippingDetails": {
+                  "@type": "OfferShippingDetails",
+                  "shippingRate": {
+                    "@type": "MonetaryAmount",
+                    "value": "0",
+                    "currency": "KES"
+                  },
+                  "shippingDestination": {
+                    "@type": "DefinedRegion",
+                    "addressCountry": "KE"
+                  },
+                  "deliveryTime": {
+                    "@type": "ShippingDeliveryTime",
+                    "handlingTime": {
+                      "@type": "QuantitativeValue",
+                      "minValue": "0",
+                      "maxValue": "1",
+                      "unitCode": "DAY"
+                    },
+                    "transitTime": {
+                      "@type": "ShippingDeliveryTime",
+                      "minValue": "1",
+                      "maxValue": "3",
+                      "unitCode": "DAY"
+                    }
+                  }
+                },
+                "hasMerchantReturnPolicy": {
+                  "@type": "MerchantReturnPolicy",
+                  "applicableCountry": "KE",
+                  "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnPeriod",
+                  "merchantReturnDays": "7",
+                  "returnMethod": "https://schema.org/ReturnByMail",
+                  "returnFees": "https://schema.org/FreeReturn"
                 }
               }
             }

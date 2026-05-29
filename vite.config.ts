@@ -7,8 +7,21 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [
     tailwindcss(),
-    react()],
+    react()
+  ],
   server: {
     allowedHosts: true
+  },
+  build: {
+    // Enable asset versioning for cache busting
+    rollupOptions: {
+      output: {
+        entryFileNames: 'assets/[name]-[hash].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash][extname]'
+      }
+    },
+    // Use default minification (esbuild)
+    sourcemap: false
   }
 })

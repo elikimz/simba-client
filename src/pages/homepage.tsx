@@ -9,6 +9,7 @@ import WhySimba from "../components/home/WhySimba";
 import PromoBanner from "../components/home/PromoBanner";
 import TestimonialsIntro from "../components/home/TestimonialsIntro";
 import TestimonialsSection from "../components/home/Testimonials";
+import LocationSection from "../components/home/LocationSection";
 import FooterTop from "../components/footer/FooterTop";
 import FooterBottom from "../components/footer/FooterBottom";
 import SEOHelmet from "../utils/SEOHelmet";
@@ -27,6 +28,7 @@ const HomePage = () => {
       />
       <Navbar />
       <HeroImproved />
+      <LocationSection />
       <FeatureStrip />
       <FeaturedCategories />
       <AboutSection />

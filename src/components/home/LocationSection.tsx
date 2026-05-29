@@ -6,7 +6,7 @@ const mapEmbedUrl = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.
 
 const LocationSection = () => {
   return (
-    <section className="bg-gray-50 py-12 sm:py-20 md:py-32">
+    <section className="bg-gray-50 py-12 sm:py-20 md:py-32" itemScope itemType="https://schema.org/LocalBusiness">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-6">
         {/* Section Title */}
         <div className="mb-12 text-center animate-slide-up">
@@ -24,7 +24,7 @@ const LocationSection = () => {
           <div className="lg:col-span-2 animate-fade-in">
             <div className="rounded-2xl overflow-hidden shadow-lg h-96 sm:h-[450px]">
               <iframe
-                title="National Simba Cements Location"
+                title="National Simba Cements Location - Nakuru, Kenya"
                 src={mapEmbedUrl}
                 className="h-full w-full border-0"
                 loading="lazy"
@@ -46,9 +46,9 @@ const LocationSection = () => {
                     <MapPin className="h-5 w-5 text-indigo-700 flex-shrink-0 mt-1" />
                     <div>
                       <p className="font-semibold text-gray-900">Address</p>
-                      <p className="text-gray-600 text-sm">
-                        Nakuru-Nyahururu Rd<br />
-                        Nakuru, Kenya
+                      <p className="text-gray-600 text-sm" itemProp="address" itemScope itemType="https://schema.org/PostalAddress">
+                        <span itemProp="streetAddress">Nakuru-Nyahururu Rd</span><br />
+                        <span itemProp="addressLocality">Nakuru</span>, <span itemProp="addressCountry">Kenya</span>
                       </p>
                     </div>
                   </div>
@@ -63,6 +63,7 @@ const LocationSection = () => {
                       <a
                         href={`tel:${phoneNumber}`}
                         className="text-indigo-700 hover:text-indigo-800 font-semibold transition-colors"
+                        itemProp="telephone"
                       >
                         +254 731 030 404
                       </a>
@@ -79,6 +80,7 @@ const LocationSection = () => {
                       <a
                         href="mailto:info@nationalsimbacements.site"
                         className="text-indigo-700 hover:text-indigo-800 font-semibold transition-colors break-all"
+                        itemProp="email"
                       >
                         info@nationalsimbacements.site
                       </a>
@@ -105,13 +107,27 @@ const LocationSection = () => {
         <div className="mt-12 rounded-2xl bg-white shadow-lg p-6 sm:p-8 animate-fade-in">
           <h3 className="text-2xl font-bold text-indigo-950 mb-6">Business Hours</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div>
+            <div itemProp="openingHoursSpecification" itemScope itemType="https://schema.org/OpeningHoursSpecification">
               <p className="font-semibold text-gray-900 mb-2">Weekdays (Mon - Fri)</p>
-              <p className="text-gray-600">8:00 AM - 5:00 PM</p>
+              <p className="text-gray-600">
+                <meta itemProp="dayOfWeek" content="Monday" />
+                <meta itemProp="dayOfWeek" content="Tuesday" />
+                <meta itemProp="dayOfWeek" content="Wednesday" />
+                <meta itemProp="dayOfWeek" content="Thursday" />
+                <meta itemProp="dayOfWeek" content="Friday" />
+                <meta itemProp="opens" content="08:00" />
+                <meta itemProp="closes" content="17:00" />
+                8:00 AM - 5:00 PM
+              </p>
             </div>
-            <div>
+            <div itemProp="openingHoursSpecification" itemScope itemType="https://schema.org/OpeningHoursSpecification">
               <p className="font-semibold text-gray-900 mb-2">Saturdays</p>
-              <p className="text-gray-600">9:00 AM - 3:00 PM</p>
+              <p className="text-gray-600">
+                <meta itemProp="dayOfWeek" content="Saturday" />
+                <meta itemProp="opens" content="09:00" />
+                <meta itemProp="closes" content="15:00" />
+                9:00 AM - 3:00 PM
+              </p>
             </div>
             <div>
               <p className="font-semibold text-gray-900 mb-2">Sundays & Holidays</p>

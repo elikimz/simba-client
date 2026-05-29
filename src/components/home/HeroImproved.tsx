@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { Phone, MessageCircle, MapPin, Mail } from "lucide-react";
+import { Phone, MessageCircle, MapPin, Mail, Loader2 } from "lucide-react";
+import { productsAPI } from "../../features/products/productsAPI";
 
 const phoneNumber = "+254731030404";
 const directionsUrl = "https://maps.app.goo.gl/hnmWMkXkQscuYyar6";
@@ -7,9 +8,11 @@ const whatsappNumber = "254731030404";
 const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
   "Hi National Simba Cements, I would like to inquire about cement prices and delivery."
 )}`;
-const mapEmbedUrl = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.8246468844367!2d35.88135!3d-0.222208!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0!2s0x0!5e0!3m2!1sen!2ske!4v1234567890`;
 
 const HeroImproved = () => {
+  // Fetch the main product (Simba Cement 42.5N - ID 10)
+  const { data: mainProduct, isLoading } = productsAPI.useGetProductQuery(10);
+
   return (
     <section className="relative min-h-screen bg-gradient-to-br from-indigo-950 via-indigo-900 to-indigo-950 overflow-hidden">
       {/* Animated Background Elements */}
@@ -61,15 +64,15 @@ const HeroImproved = () => {
           <div className="animate-slide-up">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-2 backdrop-blur-md border border-white/20">
               <span className="inline-flex h-2 w-2 rounded-full bg-indigo-400 animate-pulse"></span>
-              <span className="text-xs sm:text-sm font-semibold text-white">Premium Cement Distributor</span>
+              <span className="text-xs sm:text-sm font-semibold text-white">{mainProduct?.name || "Premium Cement Distributor"}</span>
             </div>
 
             <h1 className="mb-4 sm:mb-6 text-3xl sm:text-5xl md:text-6xl font-display font-bold leading-tight text-white">
-              Build with <span className="text-indigo-400">Excellence</span>
+              {mainProduct?.name || "Build with Excellence"}
             </h1>
 
             <p className="mb-6 sm:mb-8 max-w-2xl text-sm sm:text-base md:text-lg leading-relaxed text-indigo-100">
-              National Simba Cements delivers premium building materials with unmatched quality and reliability. From residential to industrial projects, we're your trusted partner in construction.
+              {mainProduct?.description || "National Simba Cements delivers premium building materials with unmatched quality and reliability. From residential to industrial projects, we're your trusted partner in construction."}
             </p>
 
             {/* CTA Buttons */}
@@ -107,65 +110,39 @@ const HeroImproved = () => {
             </div>
           </div>
 
-          {/* Right: Premium Map Card - Hidden on mobile, shown on desktop */}
+          {/* Right: Product Image - Hidden on mobile, shown on desktop */}
           <div className="hidden lg:block animate-fade-in">
-            <div className="rounded-2xl overflow-hidden shadow-luxury backdrop-blur-md border border-white/10 bg-white/5">
-              <div className="relative h-[400px] overflow-hidden">
-                <iframe
-                  title="National Simba Cements Location"
-                  src={mapEmbedUrl}
-                  className="h-full w-full border-0"
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  allowFullScreen
+            {isLoading ? (
+              <div className="rounded-2xl overflow-hidden shadow-luxury backdrop-blur-md border border-white/10 bg-white/5 h-[400px] flex items-center justify-center">
+                <Loader2 className="h-8 w-8 text-white animate-spin" />
+              </div>
+            ) : mainProduct?.image_url ? (
+              <div className="rounded-2xl overflow-hidden shadow-luxury">
+                <img
+                  src={mainProduct.image_url}
+                  alt={mainProduct.name}
+                  className="w-full h-auto object-cover"
                 />
               </div>
-              <div className="bg-gradient-to-r from-indigo-950 to-indigo-900 p-4 sm:p-6 border-t border-white/10">
-                <h3 className="text-base sm:text-lg font-bold text-white mb-2">Visit Our Location</h3>
-                <p className="text-indigo-200 text-xs sm:text-sm mb-4">
-                  Nakuru-Nyahururu Rd, Nakuru, Kenya
-                </p>
-                <a
-                  href={directionsUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-indigo-400 hover:text-indigo-300 font-semibold transition-colors text-sm"
-                >
-                  Get Directions →
-                </a>
-              </div>
-            </div>
+            ) : null}
           </div>
         </div>
 
-        {/* MOBILE MAP - Shown only on mobile */}
+        {/* MOBILE PRODUCT IMAGE - Shown only on mobile */}
         <div className="mt-8 lg:hidden animate-fade-in">
-          <div className="rounded-2xl overflow-hidden shadow-luxury backdrop-blur-md border border-white/10 bg-white/5">
-            <div className="relative h-[300px] overflow-hidden">
-              <iframe
-                title="National Simba Cements Location"
-                src={mapEmbedUrl}
-                className="h-full w-full border-0"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                allowFullScreen
+          {isLoading ? (
+            <div className="rounded-2xl overflow-hidden shadow-luxury backdrop-blur-md border border-white/10 bg-white/5 h-[300px] flex items-center justify-center">
+              <Loader2 className="h-8 w-8 text-white animate-spin" />
+            </div>
+          ) : mainProduct?.image_url ? (
+            <div className="rounded-2xl overflow-hidden shadow-luxury">
+              <img
+                src={mainProduct.image_url}
+                alt={mainProduct.name}
+                className="w-full h-auto object-cover"
               />
             </div>
-            <div className="bg-gradient-to-r from-indigo-950 to-indigo-900 p-4 border-t border-white/10">
-              <h3 className="text-base font-bold text-white mb-2">Visit Our Location</h3>
-              <p className="text-indigo-200 text-xs mb-3">
-                Nakuru-Nyahururu Rd, Nakuru, Kenya
-              </p>
-              <a
-                href={directionsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-indigo-400 hover:text-indigo-300 font-semibold transition-colors text-sm"
-              >
-                Get Directions →
-              </a>
-            </div>
-          </div>
+          ) : null}
         </div>
       </div>
     </section>
